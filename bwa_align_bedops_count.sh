@@ -2,10 +2,11 @@
 
 # Make sure that the .fa and .bed references are compatible (i.e. same sequence name). Also check that the .bed reference contains exon features (not just CDS)
 
+# Change the reference and bedmap reference files according to your study. These were located above the directory containing the fastq reads
+
 REFERENCE="../hyxR_pseudo_reference.fa"
 BEDMAP_REFERENCE="../hyxR_pseudo_reference_with_exons.bed"
 FILETYPE="fastq"
-#DIRECTORY="./reads"
 
 # Need to be in the reads directory
 # If the reference has already been indexed once, there's no need to index it again and the next two commands can be commented (#) out
@@ -13,8 +14,12 @@ FILETYPE="fastq"
 #echo "indexing " $REFERENCE
 #bwa index $REFERENCE
 
+# Write a loop that will generate .sai files by reading each of the paired strains to the reference strain using the tool BWA. These are outputted as $strain-name_1.sai or $strain-name_2.sai
+
 for f in *
 do
+
+# Used cut to parse out the strain name - THIS WILL ONLY WORK IF THE FASTQ FILE IS FORMATTED CORRECTLY (i.e. $strainname_1.fastq) 
 	echo "processing $(ls $f | cut -f1 -d.)"
 
 		if [[ $f == *_1.fastq ]]
@@ -34,10 +39,16 @@ do
 	fi
 done
 
+# Write another loop that will take the .sai files from the previous section, and map them to the reference strain generating .sam and .bam files.
+
 for f in *
 do
+
+# Parse out just the name of the strain (again, in the format $strainname_1.fastq) 
 	name=$(ls $f | cut -f1 -d_)
 	echo "performing alignment on " $name
+
+# Make sure that the names of paired files (.sai and .fastq) are the SAME and that the SAME strain files are being aligned to the reference (again using BWA):
 
 		if [[ $(ls $f | cut -f1 -d.) == *_1* ]]
 		then
@@ -68,12 +79,21 @@ do
 	
 done
 
+# The above command should have generated the .sam and .bam alignment files for all the reads against the reference. # The next command then counts all the reads aligning the "exons" defined by the BEDMAP_REFERENCE file.
+# This BEDMAP_REFERENCE file was generated using gff2bed (see bedops documentation). 
+
 for f in *
 do
+
+# Getting rid of the .sai files to clean up the directory
+
 	if [[ $f == *.sai ]]
 	then
 		echo "deleting " $f
 		rm $f
+
+# Taking the sorted .bam files and converting them to .bed files, and then using bedmaps to count the reads overlapping the 'exon' regions (in this case, the borders of the invertible DNA switch for hyxR)
+#The results for each strain are saved as $name.resut.bed
 
 	elif [[ $f == *.sorted.bam ]] 
 	then
@@ -83,6 +103,8 @@ do
 		echo "results for " $f " have finished compiling"
 	fi
 done
+
+# Loop to parse all of the $name.result.bed file contents into a single result.txt file with the strain identifier.
 
 for f in *
 do
@@ -94,7 +116,7 @@ do
                         EXONS=$(cut -f4 -d$'\t' $f)
                         COUNTS=$(cut -f2 -d\| $f)
                         
-                        echo $NAME $'\n' $EXONS $'\n' $COUNTS >> result.txt
+                        echo $NAME $'\n'$EXONS $'\n'$COUNTS >> result.txt
                 #       echo $COUNTS 
 
         fi
