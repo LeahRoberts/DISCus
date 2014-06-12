@@ -18,6 +18,4 @@ The reference files required are:
 Errors with Script
 --------------------
 
-The script iterates through each strain twice (generating .bam and .sam files twice, which overwrite). This doesn't create a problem for the results, it just means that the script takes twice as long to run.
-
 Strains with similar names (eg. HVM5 and HVM52) have a tendency to incorrectly align together. To solve this, I have been separating files with similar names and running the script in separate directories. 
