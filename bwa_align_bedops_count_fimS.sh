@@ -43,40 +43,44 @@ done
 
 for f in *
 do
+        if [[ $f == *fastq ]]
+        then
 
 # Parse out just the name of the strain (again, in the format $strainname_1.fastq) 
-	name=$(ls $f | cut -f1 -d_)
-	echo "performing alignment on " $name
+                name=$(ls $f | cut -f1 -d_)
 
+                if [[ ! -e $name.bam ]]
+                then
+                echo "performing alignment on " $name
 # Make sure that the names of paired files (.sai and .fastq) are the SAME and that the SAME strain files are being aligned to the reference (again using BWA):
 
-		if [[ $(ls $f | cut -f1 -d.) == *_1* ]]
-		then
-			name1=$(ls $f | cut -f1 -d.)
-#			echo $name1
-	
-		elif [[ $(ls $f | cut -f1 -d.) == *_2* ]]
-		then
-			name2=$(ls $f | cut -f1 -d.)
-#			echo $name2		
-		
-			if [[ $(ls $name1 | cut -f1 -d_) == $(ls $name2 | cut -f1 -d_) ]]
-	       	        then    
-  	             	        bwa sampe $REFERENCE $name1.sai $name2.sai $name1.fastq $name2.fastq > $name.sam
-                        	samtools view -bS $name.sam > $name.bam
-                    	    	samtools sort $name.bam $name.sorted
-                     		samtools index $name.sorted.bam         
+                        if [[ $(ls $f | cut -f1 -d.) == *_1* ]]
+                        then
+                                name1=$(ls $f | cut -f1 -d.)
+#                               echo $name1
+        
+                        elif [[ $(ls $f | cut -f1 -d.) == *_2* ]]
+                        then
+                                name2=$(ls $f | cut -f1 -d.)
+#                               echo $name2             
+                
+                                if [[ $(ls $name1 | cut -f1 -d_) == $(ls $name2 | cut -f1 -d_) ]]
+                                then
+                                        bwa sampe $REFERENCE $name1.sai $name2.sai $name1.fastq $name2.fastq > $name.sam
+                                        samtools view -bS $name.sam > $name.bam
+                                        samtools sort $name.bam $name.sorted
+                                        samtools index $name.sorted.bam 
 
-        	       	else    
-    	                    	echo $name1 " and " $name2 " are not a pair"
+                                else
+                                        echo $name1 " and " $name2 " are not a pair"
 
-			fi
-		
-		else
-			echo "oh no something must be wrong"	
-
-	fi
-	
+                                fi
+                
+                        else
+                                echo "oh no something must be wrong"    
+                        fi
+                fi
+        fi
 done
 
 # The above command should have generated the .sam and .bam alignment files for all the reads against the reference. # The next command then counts all the reads aligning the "exons" defined by the BEDMAP_REFERENCE file.
