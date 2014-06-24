@@ -10,8 +10,8 @@ BEDMAP_REFERENCE="../EC958_10bps_only.bed"
 # Need to be in the reads directory
 # If the reference has already been indexed once, there's no need to index it again and the next two commands can be commented (#) out
 
-#echo "indexing " $REFERENCE
-#bwa index $REFERENCE
+echo "indexing " $REFERENCE
+bwa index $REFERENCE
 
 # Write a loop that will generate .sai files by reading each of the paired strains to the reference strain using the tool BWA. These are outputted as $strain-name_1.sai or $strain-name_2.sai
 
