@@ -65,7 +65,7 @@ do
                 
                                 if [[ $(ls $name1 | cut -f1 -d_) == $(ls $name2 | cut -f1 -d_) ]]
                                 then
-                                        bwa sampe $REFERENCE $name1.sai $name2.sai $name1.fastq $name2.fastq > $name.sam
+                                        bwa sampe $REFERENCE $name1.sai $name2.sai $name1.fq $name2.fq > $name.sam
                                         samtools view -bS -F 4 $name.sam > $name.bam
                                         samtools sort $name.bam $name.sorted
                                         samtools index $name.sorted.bam 
