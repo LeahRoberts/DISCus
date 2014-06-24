@@ -21,7 +21,7 @@ do
 # Used cut to parse out the strain name - THIS WILL ONLY WORK IF THE FASTQ FILE IS FORMATTED CORRECTLY (i.e. $strainname_1.fastq) 
 	echo "processing $(ls $f | cut -f1 -d.)"
 
-		if [[ $f == *_R1.fastq ]]
+		if [[ $f == *_R1.fq ]]
 		then
 			read1=$f
 			name1=$(ls $f | cut -f1 -d.)
@@ -42,7 +42,7 @@ done
 
 for f in *
 do
-        if [[ $f == *fastq ]]
+        if [[ $f == *fq ]]
         then
 
 # Parse out just the name of the strain (again, in the format $strainname_1.fastq) 
