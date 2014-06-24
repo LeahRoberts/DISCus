@@ -85,29 +85,29 @@ done
 # The above command should have generated the .sam and .bam alignment files for all the reads against the reference. # The next command then counts all the reads aligning the "exons" defined by the BEDMAP_REFERENCE file.
 # This BEDMAP_REFERENCE file was generated using gff2bed (see bedops documentation). 
 
-mkdir ../tmp/
+#mkdir ../tmp/
 
-for f in *
-do
+#for f in *
+#do
 	
 # Getting rid of the .sai files to clean up the directory
 
-	if [[ $f == *.sorted.bam ]]
-	then
-		mv $f ../tmp
+#	if [[ $f == *.sorted.bam ]]
+#	then
+#		mv $f ../tmp
 		
-	elif [[ $f == *.bai ]]
-	then
-		mv $f ../tmp
-	else
-		echo "deleting " $f
-		rm $f
-	fi
+#	elif [[ $f == *.bai ]]
+#	then
+#		mv $f ../tmp
+#	else
+#		echo "deleting " $f
+#		rm $f
+#	fi
 	
-	mv ../tmp/* ./
-done	
+#	mv ../tmp/* ./
+#done	
 
-rmdir ../tmp/
+#rmdir ../tmp/
 
 # Taking the sorted .bam files and converting them to .bed files, and then using bedmaps to count the reads overlapping the 'exon' regions (in this case, the borders of the invertible DNA switch for hyxR)
 #The results for each strain are saved as $name.resut.bed
