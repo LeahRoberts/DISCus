@@ -4,9 +4,8 @@
 
 # Change the reference and bedmap reference files according to your study. These were located above the directory containing the fastq reads
 
-REFERENCE="../EC958.OFF.ON.alleles.fa"
+REFERENCE="../EC958_OFF_ON_alleles.fa"
 BEDMAP_REFERENCE="../EC958_10bps_only.bed"
-FILETYPE="fastq"
 
 # Need to be in the reads directory
 # If the reference has already been indexed once, there's no need to index it again and the next two commands can be commented (#) out
@@ -22,7 +21,7 @@ do
 # Used cut to parse out the strain name - THIS WILL ONLY WORK IF THE FASTQ FILE IS FORMATTED CORRECTLY (i.e. $strainname_1.fastq) 
 	echo "processing $(ls $f | cut -f1 -d.)"
 
-		if [[ $f == *_1.fastq ]]
+		if [[ $f == *_R1.fastq ]]
 		then
 			read1=$f
 			name1=$(ls $f | cut -f1 -d.)
@@ -54,12 +53,12 @@ do
                 echo "performing alignment on " $name
 # Make sure that the names of paired files (.sai and .fastq) are the SAME and that the SAME strain files are being aligned to the reference (again using BWA):
 
-                        if [[ $(ls $f | cut -f1 -d.) == *_1* ]]
+                        if [[ $(ls $f | cut -f1 -d.) == *_R1* ]]
                         then
                                 name1=$(ls $f | cut -f1 -d.)
 #                               echo $name1
         
-                        elif [[ $(ls $f | cut -f1 -d.) == *_2* ]]
+                        elif [[ $(ls $f | cut -f1 -d.) == *_R2* ]]
                         then
                                 name2=$(ls $f | cut -f1 -d.)
 #                               echo $name2             
@@ -67,7 +66,7 @@ do
                                 if [[ $(ls $name1 | cut -f1 -d_) == $(ls $name2 | cut -f1 -d_) ]]
                                 then
                                         bwa sampe $REFERENCE $name1.sai $name2.sai $name1.fastq $name2.fastq > $name.sam
-                                        samtools view -bS $name.sam > $name.bam
+                                        samtools view -bS -F 4 $name.sam > $name.bam
                                         samtools sort $name.bam $name.sorted
                                         samtools index $name.sorted.bam 
 
@@ -86,20 +85,35 @@ done
 # The above command should have generated the .sam and .bam alignment files for all the reads against the reference. # The next command then counts all the reads aligning the "exons" defined by the BEDMAP_REFERENCE file.
 # This BEDMAP_REFERENCE file was generated using gff2bed (see bedops documentation). 
 
+mkdir ../tmp/
+
 for f in *
 do
-
+	
 # Getting rid of the .sai files to clean up the directory
 
-	if [[ $f == *.sai ]]
+	if [[ $f == *.sorted.bam ]]
 	then
+		mv $f ../tmp
+		
+	elif [[ $f == *.bai ]]
+	then
+		mv $f ../tmp
+	else
 		echo "deleting " $f
 		rm $f
+	fi
+	
+	mv ../tmp/* ./
+done	
+
+rmdir ../tmp/
 
 # Taking the sorted .bam files and converting them to .bed files, and then using bedmaps to count the reads overlapping the 'exon' regions (in this case, the borders of the invertible DNA switch for hyxR)
 #The results for each strain are saved as $name.resut.bed
-
-	elif [[ $f == *.sorted.bam ]] 
+for f in *
+do
+	if [[ $f == *.sorted.bam ]] 
 	then
 		echo "converting " $f " to bed file"
 		bam2bed < $f > $f.bed
