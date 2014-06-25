@@ -11,8 +11,8 @@ FILETYPE="fastq"
 # Need to be in the reads directory
 # If the reference has already been indexed once, there's no need to index it again and the next two commands can be commented (#) out
 
-#echo "indexing " $REFERENCE
-#bwa index $REFERENCE
+echo "indexing " $REFERENCE
+bwa index $REFERENCE
 
 # Write a loop that will generate .sai files by reading each of the paired strains to the reference strain using the tool BWA. These are outputted as $strain-name_1.sai or $strain-name_2.sai
 
@@ -32,7 +32,7 @@ do
 		else
 			read2=$f
 			name2=$(ls $f | cut -f1 -d.)	
-			echo "paired-end read " $name2
+#			echo "paired-end read " $name2
 			bwa aln $REFERENCE $read2 > $name2.sai
 #			echo $name2
 #			echo $read2
@@ -67,7 +67,7 @@ do
 				if [[ $(ls $name1 | cut -f1 -d_) == $(ls $name2 | cut -f1 -d_) ]]
 	       	        	then    
   	             	        	bwa sampe $REFERENCE $name1.sai $name2.sai $name1.fastq $name2.fastq > $name.sam
-                        		samtools view -bS $name.sam > $name.bam
+                        		samtools view -bS -F 4 $name.sam > $name.bam
                     	    		samtools sort $name.bam $name.sorted
                      			samtools index $name.sorted.bam         
 
@@ -91,7 +91,12 @@ do
 
 # Getting rid of the .sai files to clean up the directory
 
-	if [[ $f == *.sai ]]
+	if [[ $f == *.sam ]]
+	then
+		echo "deleting " $f
+		rm $f
+		
+	elif [[ $f == *.sai ]]
 	then
 		echo "deleting " $f
 		rm $f
