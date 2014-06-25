@@ -4,8 +4,8 @@
 
 # Change the reference and bedmap reference files according to your study. These were located above the directory containing the fastq reads
 
-REFERENCE="../hyxR_pseudo_reference.fa"
-BEDMAP_REFERENCE="../hyxR_pseudo_reference_with_exons.bed"
+REFERENCE="../EC958_ON_OFF_reverse.fasta"
+BEDMAP_REFERENCE="../EC958_ON_OFF_reverse.bed"
 FILETYPE="fastq"
 
 # Need to be in the reads directory
