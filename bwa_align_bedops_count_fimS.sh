@@ -4,8 +4,8 @@
 
 # Change the reference and bedmap reference files according to your study. These were located above the directory containing the fastq reads
 
-REFERENCE="../EC958_ON_OFF_reverse.fasta"
-BEDMAP_REFERENCE="../EC958_ON_OFF_reverse.bed"
+REFERENCE="../EC958_OFF_ON_alleles.fa"
+BEDMAP_REFERENCE="../EC958_10bps_only.bed"
 
 # Need to be in the reads directory
 # If the reference has already been indexed once, there's no need to index it again and the next two commands can be commented (#) out
@@ -68,7 +68,9 @@ do
                                         bwa sampe $REFERENCE $name1.sai $name2.sai $name1.fq $name2.fq > $name.sam
                                         samtools view -bS -F 4 $name.sam > $name.bam
                                         samtools sort $name.bam $name.sorted
-                                        samtools index $name.sorted.bam 
+                                        samtools index $name.sorted.bam
+                                        rm *.sai *.sam
+                                        rm $name.bam
 
                                 else
                                         echo $name1 " and " $name2 " are not a pair"
