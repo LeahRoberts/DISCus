@@ -4,8 +4,8 @@
 
 # Change the reference and bedmap reference files according to your study. These were located above the directory containing the fastq reads
 
-REFERENCE="../EC958_OFF_ON_alleles.fa"
-BEDMAP_REFERENCE="../EC958_10bps_only.bed"
+REFERENCE="../EC958_ON_OFF_reverse.fasta"
+BEDMAP_REFERENCE="../EC958_ON_OFF_reverse.bed"
 
 # Need to be in the reads directory
 # If the reference has already been indexed once, there's no need to index it again and the next two commands can be commented (#) out
