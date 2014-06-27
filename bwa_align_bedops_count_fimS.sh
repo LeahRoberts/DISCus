@@ -69,7 +69,7 @@ do
                                         samtools view -bS -F 4 $name.sam > $name.bam
                                         samtools sort $name.bam $name.sorted
                                         samtools index $name.sorted.bam
-                                        rm *.sai *.sam
+                                        rm $name1.sai $name2.sai $name.sam
                                         rm $name.bam
 
                                 else
