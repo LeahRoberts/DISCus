@@ -21,8 +21,9 @@ For the script to work, the fastq files should be named in a way similar to this
 
 
 The reference files required are:
-  * A fasta file for mapping the reads to
-  * A .bed file generated from a .gff file using gff2bed containing the exons you want to count reads overlapping::
+
+A fasta file for mapping the reads to
+A .bed file generated from a .gff file using gff2bed containing the exons you want to count reads overlapping::
 
  $ gff2bed < genes.gff > genes.bed
  $ bam2bed < reads.bam > reads.bed
