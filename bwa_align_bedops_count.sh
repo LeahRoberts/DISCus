@@ -6,7 +6,15 @@
 
 REFERENCE="../EC958_ON_OFF_reverse.fasta"
 BEDMAP_REFERENCE="../EC958_ON_OFF_reverse.bed"
-FILETYPE="fastq"
+
+# Test new input method using variables
+# Example run of script = bash bwa_align_bedops_count.sh $DIRECTORY $REFERENCE $BEDMAP_REFERENCE
+
+#REFERENCE=$2
+#BEDMAP_REFERENCE=$3
+#DIRECTORY=$1
+
+#DIRECTORY should be in the format name/*.fq
 
 # Need to be in the reads directory
 # If the reference has already been indexed once, there's no need to index it again and the next two commands can be commented (#) out
@@ -17,6 +25,8 @@ bwa index $REFERENCE
 # Write a loop that will generate .sai files by reading each of the paired strains to the reference strain using the tool BWA. These are outputted as $strain-name_1.sai or $strain-name_2.sai
 
 for f in *
+# change to for f in $DIRECTORY
+
 do
 
 # Used cut to parse out the strain name - THIS WILL ONLY WORK IF THE FASTQ FILE IS FORMATTED CORRECTLY (i.e. $strainname_1.fastq) 
