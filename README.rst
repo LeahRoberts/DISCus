@@ -1,7 +1,7 @@
 BWA_Bedops_aligner
 ==================
 
-Script for aligning illumina paired end reads with BWA and counting read overlap using Bedops
+Script for aligning illumina paired end reads with BWA and counting read overlap using: (1) Bedops; and (2) read-pairs traversing the desired region.
 
 How-To: Run Me
 ---------------
@@ -10,9 +10,12 @@ This bash scripts requires the reference sequences to have already been generate
 
 To run the script, simply type::
 
- bash ~/bin/bwa_bedops_aligner_fimS.sh
+ bash <script> <REFERENCE> <BEDMAP_REFERENCE>
+
+The REFERENCE will serve as the reference for the read mapping. 
+The BEDMAP_REFERENCE will specify the location of the desired overlap regions.
  
-*Note: this script has been modified to accept a particular format of data.*
+*Note: this script has been modified to accept a particular format of data. See below for detailed formatting specifications.*
 
 For the script to work, the fastq files should be named in a way similar to this::
 
@@ -20,10 +23,10 @@ For the script to work, the fastq files should be named in a way similar to this
  $name_2.fastq
 
 
-The reference files required are:
+The specifications for the reference files are:
 
-1. A fasta file for mapping the reads to
-2. A .bed file generated from a .gff file using gff2bed containing the exons you want to count reads overlapping.
+1. A fasta file for mapping the reads to (REFERENCE).
+2. A .bed file generated from a .gff file using gff2bed containing the exons you want to count reads overlapping (BEDMAP_REFERENCE).
 
 You can generate this by using Bedops::
 
