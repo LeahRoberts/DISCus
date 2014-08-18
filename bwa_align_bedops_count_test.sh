@@ -130,7 +130,7 @@ do
 		echo "converting " $f " to bed file"
 		bam2bed < $f > $f.bed
 		bedmap --echo --count $BEDMAP_REFERENCE $f.bed > $f.result.bed
-		echo "results for " $f " have finished compiling"
+		echo "results for "$f" have finished compiling"
 	fi
 done
 
@@ -138,17 +138,19 @@ done
 
 for f in *
 do
-        NAME=$(ls $f | cut -f1 -d.)
-
-                if [[ $f == *.result.bed ]]
-                then
-                        EXONS=$(cut -f4 -d$'\t' $f)
-                        COUNTS=$(cut -f2 -d\| $f)
+	if [[ $f == *.result.bed ]]
+        then
+		echo $f
+		NAME=$(ls $f | cut -f1 -d.) 
+	        OFF_1=$(head -1 $f | cut -f2 -d\|)
+        	OFF_2=$(tail -1 $f | cut -f2 -d\|)
                         
-                        echo $NAME','$EXONS','$COUNTS >> fim_OFF_bed_results.csv
+              	echo $NAME','$OFF_1','$OFF_2 >> fim_OFF_bed_results.csv
 
         fi
 done
+
+echo "finished creating csv file"
 
 # This next section counts the number of read-pairs that overlap the 3 regions, namely Left Flank, Switch Region, 
 # and Right Flank.
@@ -169,15 +171,15 @@ switch_region_no=0
 # Reads the sorted bam file and obtains all of the read IDs.
 # These are then sorted so that the paired reads are together.
 
-echo "" > completed.reads
 
 for f in *
 do
+	echo "" > completed.reads
+	
 	if [[ $f == *.sorted.bam ]]
 	then
 		samtools view $f | cut -f1 -d$'\t' > readnames
 		sort readnames > readnames.sorted
-
 		echo "assigning reads..."
 
 # The next loop reads in the 'readnames.sorted' file which contains all of the read IDs. As there are two
@@ -274,10 +276,6 @@ do
 #						echo "adding to OFF_1"
 					fi
 
-# Creating a csv file for the results output
-
-				NAME=$(ls $f | cut -f1 -d.)
-				echo $NAME','$OFF_1','$OFF_2 >> fimS_OFF_positions.csv
 # Printing out results
 
 #				echo 'OFF_1 = ' $OFF_1
@@ -288,15 +286,25 @@ do
 #				echo 'read_count = ' $readcount
 
 				fi
-
 			fi
-done <readnames.sorted
+
+		done <readnames.sorted
+
+# Creating a csv file for the results output
+
+	NAME=$(ls $f | cut -f1 -d.)
+	echo $NAME','$OFF_1','$OFF_2 >> fimS_OFF_positions.csv
+	
+	rm completed.reads	
+	fi
+done
 
 # Cleaning up files:
 
 rm readnames
-rm completed.reads
+rm readnames.sorted
 rm position.txt
 
 
 echo "Finished!"
+
