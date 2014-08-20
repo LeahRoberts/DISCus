@@ -34,18 +34,18 @@ do
 
 # Used cut to parse out the strain name - THIS WILL ONLY WORK IF THE FASTQ FILE IS 
 # FORMATTED CORRECTLY (i.e. $strainname_1.fastq).
-	echo "processing $(ls $f | cut -f1 -d.)"
+	echo "processing $(echo $f | cut -f1 -d.)"
 
 		if [[ $f == *_1.fastq ]]
 		then
 			read1=$f
-			name1=$(ls $f | cut -f1 -d.)
+			name1=$(echo $f | cut -f1 -d.)
 			bwa aln $REFERENCE $read1 > $name1.sai
 		
 		elif [[ $f == *_2.fastq ]]
 		then
 			read2=$f
-			name2=$(ls $f | cut -f1 -d.)	
+			name2=$(echo $f | cut -f1 -d.)	
 			bwa aln $REFERENCE $read2 > $name2.sai
 	fi
 done
@@ -59,7 +59,7 @@ do
 	then
 
 # Parse out just the name of the strain (again, in the format $strainname_1.fastq). 
-		name=$(ls $f | cut -f1 -d_)
+		name=$(echo $f | cut -f1 -d_)
 		
 # Want to only perform the alignment once - as there are two .sai files, this has the 
 # potential to interate through twice. This if statement prevents the script from 
@@ -71,15 +71,15 @@ do
 # Make sure that the names of paired files (.sai and .fastq) are the SAME and that the 
 # SAME strain files are being aligned to the reference (again using BWA):
 
-			if [[ $(ls $f | cut -f1 -d.) == *_1* ]]
+			if [[ $(echo $f | cut -f1 -d.) == *_1* ]]
 			then
-				name1=$(ls $f | cut -f1 -d.)
+				name1=$(echo $f | cut -f1 -d.)
 	
-			elif [[ $(ls $f | cut -f1 -d.) == *_2* ]]
+			elif [[ $(echo $f | cut -f1 -d.) == *_2* ]]
 			then
-				name2=$(ls $f | cut -f1 -d.)
+				name2=$(echo $f | cut -f1 -d.)
 		
-				if [[ $(ls $name1 | cut -f1 -d_) == $(ls $name2 | cut -f1 -d_) ]]
+				if [[ $(echo $name1 | cut -f1 -d_) == $(echo $name2 | cut -f1 -d_) ]]
 	       	        	then    
   	        
 # The '-f 0x0002' flag will filter for only properly mapped reads, while the '-F 4' flag
@@ -141,7 +141,7 @@ do
 	if [[ $f == *.result.bed ]]
         then
 		echo $f
-		NAME=$(ls $f | cut -f1 -d.) 
+		NAME=$(echo $f | cut -f1 -d.) 
 	        OFF_1=$(head -1 $f | cut -f2 -d\|)
         	OFF_2=$(tail -1 $f | cut -f2 -d\|)
                         
@@ -180,7 +180,7 @@ do
 	then
 		samtools view $f | cut -f1 -d$'\t' > readnames
 		sort readnames > readnames.sorted
-		echo "assigning reads..."
+		echo "assigning reads to..."$f
 
 # The next loop reads in the 'readnames.sorted' file which contains all of the read IDs. As there are two
 # reads with the same ID, the script will generate twice as many overlaps as the actual amount.
@@ -202,7 +202,7 @@ do
 # starting coordinate, either 'left_flank' (0-999), 'switch_region' (1000-1313) or 'right_flank' (>=1314).
  
 				echo $name >> completed.reads
-				samtools view B36EC.sorted.bam | grep $name | cut -f4 -d$'\t' > position.txt
+				samtools view $f | grep $name | cut -f4 -d$'\t' > position.txt
 #				cat position.txt
 
 				a=$(head -1 position.txt)
@@ -295,6 +295,7 @@ do
 	NAME=$(ls $f | cut -f1 -d.)
 	echo $NAME','$OFF_1','$OFF_2 >> fimS_OFF_positions.csv
 	
+	echo "completed.reads removed"	
 	rm completed.reads	
 	fi
 done
