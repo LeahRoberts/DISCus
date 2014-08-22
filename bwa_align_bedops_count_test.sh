@@ -208,13 +208,13 @@ do
 				a=$(head -1 position.txt)
 #				echo $a
 
-				if [ $a -le 999 ]
+				if [ $a -le 1000 ]
 				then
 					read1='left_flank'
 					left_flank_no=$(($left_flank_no + 1))
 #					echo "read 1 is on the left"
 		
-				elif [ $a -ge 1000 -a $a -le 1313 ]
+				elif [ $a -ge 1001 -a $a -le 1313 ]
 				then
 					read1='switch_region'
 					switch_region_no=$(($switch_region_no + 1))
@@ -305,6 +305,18 @@ done
 rm readnames
 rm readnames.sorted
 rm position.txt
+
+# Move all of the files into directories of their own
+
+for f in *
+do
+	if [[ $f == *.result.bed ]]
+	then
+		NAME=$(echo $f | cut -f1 -d.)
+		mkdir ana_$NAME
+		mv $NAME* ana_$NAME
+	fi
+done
 
 
 echo "Finished!"
