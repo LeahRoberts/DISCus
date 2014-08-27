@@ -158,16 +158,6 @@ echo "finished creating csv file"
 # Assigning of variables to tally the amount of reads in each region.
 # Some of these variables also validates the correctness of the pre-generated bam file.
   
-readcount=0
-
-OFF_1=0
-OFF_2=0
-
-right_flank_no=0
-left_flank_no=0
-switch_region_no=0
-
-
 # Reads the sorted bam file and obtains all of the read IDs.
 # These are then sorted so that the paired reads are together.
 
@@ -182,6 +172,14 @@ do
 		sort readnames > readnames.sorted
 		echo "assigning reads to..."$f
 
+		readcount=0
+				
+		OFF_1=0
+		OFF_2=0
+				
+		right_flank=0
+		left_flank=0
+		switch_region=0
 # The next loop reads in the 'readnames.sorted' file which contains all of the read IDs. As there are two
 # reads with the same ID, the script will generate twice as many overlaps as the actual amount.
 # To account for this, the script checks the current read ID against a list of already analysed read IDs.
@@ -204,6 +202,7 @@ do
 				echo $name >> completed.reads
 				samtools view $f | grep $name | cut -f4 -d$'\t' > position.txt
 #				cat position.txt
+				
 
 				a=$(head -1 position.txt)
 #				echo $a
@@ -305,6 +304,7 @@ done
 rm readnames
 rm readnames.sorted
 rm position.txt
+rm completed.reads
 
 # Move all of the files into directories of their own
 
