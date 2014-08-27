@@ -305,6 +305,7 @@ rm readnames
 rm readnames.sorted
 rm position.txt
 rm completed.reads
+rm *.fastq
 
 # Move all of the files into directories of their own
 
