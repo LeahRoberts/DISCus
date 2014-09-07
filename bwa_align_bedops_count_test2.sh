@@ -136,21 +136,21 @@ done
 
 # Loop to parse all of the $name.result.bed file contents into a single result.csv file with the strain identifier.
 
-for f in *
-do
-	if [[ $f == *.result.bed ]]
-        then
-		echo $f
-		NAME=$(echo $f | cut -f1 -d.) 
-	        OFF_1=$(head -1 $f | cut -f2 -d\|)
-        	OFF_2=$(tail -1 $f | cut -f2 -d\|)
-                        
-              	echo $NAME','$OFF_1','$OFF_2 >> fim_OFF_bed_results.csv
+#for f in *
+#do
+#	if [[ $f == *.result.bed ]]
+ #       then
+#		echo $f
+#		NAME=$(echo $f | cut -f1 -d.) 
+#	        OFF_1=$(head -1 $f | cut -f2 -d\|)
+ #       	OFF_2=$(tail -1 $f | cut -f2 -d\|)
+  #                      
+   #           	echo $NAME','$OFF_1','$OFF_2 >> fim_OFF_bed_results.csv
+#
+ #       fi
+#done
 
-        fi
-done
-
-echo "finished creating csv file"
+# echo "finished creating csv file"
 
 # This next section counts the number of read-pairs that overlap the 3 regions, namely Left Flank, Switch Region, 
 # and Right Flank.
@@ -176,10 +176,12 @@ do
 				
 		OFF_1=0
 		OFF_2=0
-				
-		right_flank=0
-		left_flank=0
-		switch_region=0
+		ON_1=0
+		ON_2=0
+		
+#		right_flank=0
+#		left_flank=0
+#		switch_region=0
 # The next loop reads in the 'readnames.sorted' file which contains all of the read IDs. As there are two
 # reads with the same ID, the script will generate twice as many overlaps as the actual amount.
 # To account for this, the script checks the current read ID against a list of already analysed read IDs.
@@ -209,21 +211,33 @@ do
 
 				if [ $a -le 1000 ]
 				then
-					read1='left_flank'
-					left_flank_no=$(($left_flank_no + 1))
+					read1='OFF_left_flank'
+				#	left_flank_no=$(($left_flank_no + 1))
 #					echo "read 1 is on the left"
 		
 				elif [ $a -ge 1001 -a $a -le 1313 ]
 				then
-					read1='switch_region'
-					switch_region_no=$(($switch_region_no + 1))
+					read1='OFF_switch_region'
+				#	switch_region_no=$(($switch_region_no + 1))
 #					echo "read 1 is in the switch region"
 			
-				elif [ $a -ge 1314 ]
+				elif [ $a -ge 1314 -a $a -le 2313 ]
 				then
-					read1='right_flank'
-					right_flank_no=$(($right_flank_no + 1))
+					read1='OFF_right_flank'
+				#	right_flank_no=$(($right_flank_no + 1))
 #					echo "read 1 is on the right"
+				
+				elif [ $a -ge 2314 -a $a -le 3313 ]
+				then
+					read1='ON_left_flank'
+				
+				elif [ $a -ge 3314 -a $a -le 3626 ]
+				then
+					read1='ON_switch_region'
+
+				elif [ $a -ge 3627 ]
+				then
+					read1='ON_right_flank'	
 				fi
 
 				b=$(tail -1 position.txt)
@@ -231,21 +245,33 @@ do
 
 				if [ $b -le 999 ]
         			then
-                			read2='left_flank'
-					left_flank_no=$(($left_flank_no + 1))
+                			read2='OFF_left_flank'
+				#	left_flank_no=$(($left_flank_no + 1))
 #					echo "read 2 is on the left"        
 
         			elif [ $b -ge 1000 -a $b -le 1313 ]
         			then
-                			read2='switch_region'
-					switch_region_no=$(($switch_region_no + 1))
+                			read2='OFF_switch_region'
+				#	switch_region_no=$(($switch_region_no + 1))
 #					echo "read 2 is in the switch region"        
 
-        			elif [ $b -ge 1314 ]
+        			elif [ $b -ge 1314 -a $b -le 2313 ]
         			then
-                			read2='right_flank'
-        				right_flank_no=$(($right_flank_no + 1))
+                			read2='OFF_right_flank'
+        			#	right_flank_no=$(($right_flank_no + 1))
 #					echo "read 2 is on the right"
+
+				elif [ $b -ge 2314 -a $b -le 3313 ]
+                                then
+                                        read2='ON_left_flank'
+                                
+				elif [ $b -ge 3314 -a $b -le 3626 ]
+                                then
+                                        read2='ON_switch_region'
+                                
+                                elif [ $b -ge 3627 ]
+                                then
+                                        read2='ON_right_flank'
 				fi
 
 # At this point the script counts the number of reads overlapping different region. 
@@ -255,30 +281,48 @@ do
 # where the reads lie, a '+1' is added to the tally for either OFF_1 (i.e. read pairs in the left flank and 
 # in the switch region), or OFF_2 (i.e. read pairs in the right flank and in the switch region). 
 
-				if [[ $read1 != $read2 ]]
+				if [[ $read1 != $read2  ]]
 				then
-					if [[ $read1 == 'switch_region' ]] && [[ $read2 == 'right_flank' ]]
+					if [[ $read1 == 'OFF_switch_region' ]] && [[ $read2 == 'OFF_right_flank' ]]
 					then
 						OFF_2=$(($OFF_2 + 1))
 #						echo "adding to OFF_2"
-						echo $name >> mapped_reads.txt		
-					elif [[ $read1 == 'switch_region' ]] && [[ $read2 == 'left_flank' ]]
+						echo $name >> mapped_reads_OFF.txt		
+					elif [[ $read1 == 'OFF_switch_region' ]] && [[ $read2 == 'OFF_left_flank' ]]
 					then
 						OFF_1=$(($OFF_1 + 1))
 #						echo "adding to OFF_1"
-						echo $name >> mapped_reads.txt
-					elif [[ $read2 == 'switch_region' ]] && [[ $read1 == 'right_flank' ]]
+						echo $name >> mapped_reads_OFF.txt
+					elif [[ $read2 == 'OFF_switch_region' ]] && [[ $read1 == 'OFF_right_flank' ]]
 					then
                         			OFF_2=$(($OFF_2 + 1))
 #						echo "adding to OFF_2"
-						echo $name >> mapped_reads.txt
-					elif [[ $read2 == 'switch_region' ]] && [[ $read1 == 'left_flank' ]]
+						echo $name >> mapped_reads_OFF.txt
+					elif [[ $read2 == 'OFF_switch_region' ]] && [[ $read1 == 'OFF_left_flank' ]]
 					then
 						OFF_1=$(($OFF_1 + 1))	
 #						echo "adding to OFF_1"
-						echo $name >> mapped_reads.txt
-					fi
+						echo $name >> mapped_reads_OFF.txt
+					
+					elif [[ $read1 == 'ON_switch_region' ]] && [[ $read2 == 'ON_right_flank' ]]
+                                        then    
+                                                ON_2=$(($ON_2 + 1))
+                                                echo $name >> mapped_reads_ON.txt                  
+                                        elif [[ $read1 == 'ON_switch_region' ]] && [[ $read2 == 'ON_left_flank' ]]
+                                        then    
+                                                ON_1=$(($ON_1 + 1))
+                                                echo $name >> mapped_reads_ON.txt
+                                        elif [[ $read2 == 'ON_switch_region' ]] && [[ $read1 == 'ON_right_flank' ]]
+                                        then    
+                                                ON_2=$(($ON_2 + 1))
+                                                echo $name >> mapped_reads_ON.txt
+                                        elif [[ $read2 == 'ON_switch_region' ]] && [[ $read1 == 'ON_left_flank' ]]
+                                        then    
+                                                ON_1=$(($ON_1 + 1))   
+                                                echo $name >> mapped_reads_ON.txt
 
+					
+					fi
 # Printing out results
 
 #				echo 'OFF_1 = ' $OFF_1
@@ -296,7 +340,7 @@ do
 # Creating a csv file for the results output
 
 	NAME=$(ls $f | cut -f1 -d.)
-	echo $NAME','$OFF_1','$OFF_2 >> fimS_OFF_positions.csv
+	echo $NAME','$OFF_1','$OFF_2','$ON_1','$ON_2 >> fimS_OFF_ON_positions.csv
 	
 	echo "completed.reads removed"	
 	rm completed.reads	
