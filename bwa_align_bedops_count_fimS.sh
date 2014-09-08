@@ -18,23 +18,20 @@ bwa index $REFERENCE
 for f in *
 do
 
-# Used cut to parse out the strain name - THIS WILL ONLY WORK IF THE FASTQ FILE IS FORMATTED CORRECTLY (i.e. $strainname_1.fastq) 
-	echo "processing $(ls $f | cut -f1 -d.)"
+# Used cut to parse out the strain name - THIS WILL ONLY WORK IF THE FASTQ FILE IS FORMATTED CORRECTLY (i.e. $strainname.R1.fastq) 
+	echo "processing $(echo $f | cut -f1 -d.)"
 
-		if [[ $f == *_R1.fq ]]
+		if [[ $f == *.R1.fastq ]]
 		then
 			read1=$f
-			name1=$(ls $f | cut -f1 -d.)
-			bwa aln $REFERENCE $read1 > $name1.sai
-#			echo $name1
-#			echo $read1
-		else
+			name1=$(echo $f | cut -f1 -d.)
+			bwa aln $REFERENCE $read1 > $name1.R1.sai
+		elif [[ $f == *.R2.fastq ]]
+		then
 			read2=$f
-			name2=$(ls $f | cut -f1 -d.)	
+			name2=$(echo $f | cut -f1 -d.)	
 			echo "paired-end read " $name2
-			bwa aln $REFERENCE $read2 > $name2.sai
-#			echo $name2
-#			echo $read2
+			bwa aln $REFERENCE $read2 > $name2.R2.sai
 	fi
 done
 
@@ -42,30 +39,30 @@ done
 
 for f in *
 do
-        if [[ $f == *fq ]]
+        if [[ $f == *fastq ]]
         then
 
 # Parse out just the name of the strain (again, in the format $strainname_1.fastq) 
-                name=$(ls $f | cut -f1 -d_)
+                name=$(echo $f | cut -f1 -d.)
 
                 if [[ ! -e $name.bam ]]
                 then
                 echo "performing alignment on " $name
 # Make sure that the names of paired files (.sai and .fastq) are the SAME and that the SAME strain files are being aligned to the reference (again using BWA):
 
-                        if [[ $(ls $f | cut -f1 -d.) == *_R1* ]]
+                        if [[ $f  == *R1* ]]
                         then
-                                name1=$(ls $f | cut -f1 -d.)
+                                name1=$(echo $f | cut -f1-2 -d.)
 #                               echo $name1
         
-                        elif [[ $(ls $f | cut -f1 -d.) == *_R2* ]]
+                        elif [[ $f == *R2* ]]
                         then
-                                name2=$(ls $f | cut -f1 -d.)
+                                name2=$(echo $f | cut -f1-2 -d.)
 #                               echo $name2             
                 
-                                if [[ $(ls $name1 | cut -f1 -d_) == $(ls $name2 | cut -f1 -d_) ]]
+                                if [[ $(echo $name1 | cut -f1 -d.) == $(ls $name2 | cut -f1 -d.) ]]
                                 then
-                                        bwa sampe $REFERENCE $name1.sai $name2.sai $name1.fq $name2.fq > $name.sam
+                                        bwa sampe $REFERENCE $name1.sai $name2.sai $name1.fastq $name2.fastq > $name.sam
                                         samtools view -bS -F 4 $name.sam > $name.bam
                                         samtools sort $name.bam $name.sorted
                                         samtools index $name.sorted.bam
@@ -84,35 +81,37 @@ do
         fi
 done
 
-# The above command should have generated the .sam and .bam alignment files for all the reads against the reference. # The next command then counts all the reads aligning the "exons" defined by the BEDMAP_REFERENCE file.
+# The above command should have generated the .sam and .bam alignment files for all the reads against the reference. 
+# The next command then counts all the reads aligning the "exons" defined by the BEDMAP_REFERENCE file.
 # This BEDMAP_REFERENCE file was generated using gff2bed (see bedops documentation). 
 
-#mkdir ../tmp/
+mkdir ../tmp/
 
-#for f in *
-#do
+for f in *
+do
 	
 # Getting rid of the .sai files to clean up the directory
 
-#	if [[ $f == *.sorted.bam ]]
-#	then
-#		mv $f ../tmp
+	if [[ $f == *.sorted.bam ]]
+	then
+		mv $f ../tmp
 		
-#	elif [[ $f == *.bai ]]
-#	then
-#		mv $f ../tmp
-#	else
-#		echo "deleting " $f
-#		rm $f
-#	fi
+	elif [[ $f == *.bai ]]
+	then
+		mv $f ../tmp
+	else
+		echo "deleting " $f
+		rm $f
+	fi
 	
-#	mv ../tmp/* ./
-#done	
+	mv ../tmp/* ./
+done	
 
-#rmdir ../tmp/
+rmdir ../tmp/
 
 # Taking the sorted .bam files and converting them to .bed files, and then using bedmaps to count the reads overlapping the 'exon' regions (in this case, the borders of the invertible DNA switch for hyxR)
 #The results for each strain are saved as $name.resut.bed
+
 for f in *
 do
 	if [[ $f == *.sorted.bam ]] 
@@ -128,16 +127,15 @@ done
 
 for f in *
 do
-        NAME=$(ls $f | cut -f1 -d.)
-
-                if [[ $f == *.result.bed ]]
+       	NAME=$(echo $f | cut -f1 -d.)
+        
+	        if [[ $f == *.result.bed ]]
                 then
-                #       echo $NAME
-                        EXONS=$(cut -f4 -d$'\t' $f)
+                        POS_start=$(cut -f2 -d$'\t' $f)
+			POS_end=$(cut -f3 -d$'\t' $f)
                         COUNTS=$(cut -f2 -d\| $f)
                         
-                        echo $NAME $'\n'$EXONS $'\n'$COUNTS >> result.txt
-                #       echo $COUNTS 
+                        echo $NAME','$POS_start'..'$POS_end','$COUNTS >> bedmap_results.csv
 
         fi
 done
