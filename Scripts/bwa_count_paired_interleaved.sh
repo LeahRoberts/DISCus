@@ -1,25 +1,18 @@
 #!/bin/bash
 
 # This script is designed to align reads to a reference using BWA, and then count the 
-# number of reads overlapping predefined regions. This script generates two outputs: one
-# output describes the number of reads physically overlapping the predefined regions, and
-# another output describing read-pairs that span across the desired regions.
+# number of reads overlapping predefined regions. This script generates one output: 
+# counts the read-pairs that span across the desired regions.
 
 # The script should be run from inside the directory with the fastq reads: 
-# $ bash <script.sh> $REFERENCE $BEDMAP_REFERENCE
-
-# It is very important that the fastq files are formatted correctly for the script to work:
-# 	strain_1.fastq
-# 	strain_2.fastq
+# $ bash <script.sh> $REFERENCE 
 
 # The REFERENCE is what the reads will be mapped to. It should be in the format ../reference.fa
-# the BEDMAP_REFERENCE defines the desired regions. It should be in the format ../bedmap_format.fa
 
 # Make sure that the .fa and .bed references are compatible (i.e. same sequence name - refer to the README). 
 # Also check that the .bed reference contains exon features (not just CDS).
 
 REFERENCE=$1
-BEDMAP_REFERENCE=$2
 
 # First need to index the reference fasta file to be used in the mapping:
 echo "indexing " $REFERENCE
@@ -47,27 +40,16 @@ do
 # will get rid of reads that are not mapped to the reference.
 
     	        	/home/leah/bin/bwa/bwa mem $REFERENCE -p $f > $name.sam
-                    	samtools view -bS -f 0x0002 -F 4 $name.sam > $name.bam
+                    	samtools view -bS -F 4 $name.sam > $name.bam
                     	samtools sort $name.bam $name.sorted
                      	samtools index $name.sorted.bam         
-
+			rm $name.sam
+			rm $name.bam
 		fi
 	fi
 done
 
 # The above command should have generated the .sam and .bam alignment files for all the reads against the reference. 
-
-# Getting rid of the .sai files to clean up the directory.
-
-for f in *
-do
-        if [[ $f == *.sam ]]
-        then
-                echo "deleting " $f
-                rm $f
-
-	fi
-done
 
 # This next section counts the number of read-pairs that overlap the 3 regions, namely Left Flank, Switch Region, 
 # and Right Flank.
@@ -208,39 +190,39 @@ do
 					then
 						OFF_2=$(($OFF_2 + 1))
 #						echo "adding to OFF_2"
-						echo $name >> mapped_reads_OFF.txt		
+#						echo $name >> mapped_reads_OFF.txt		
 					elif [[ $read1 == 'OFF_switch_region' ]] && [[ $read2 == 'OFF_left_flank' ]]
 					then
 						OFF_1=$(($OFF_1 + 1))
 #						echo "adding to OFF_1"
-						echo $name >> mapped_reads_OFF.txt
+#						echo $name >> mapped_reads_OFF.txt
 					elif [[ $read2 == 'OFF_switch_region' ]] && [[ $read1 == 'OFF_right_flank' ]]
 					then
                         			OFF_2=$(($OFF_2 + 1))
 #						echo "adding to OFF_2"
-						echo $name >> mapped_reads_OFF.txt
+#						echo $name >> mapped_reads_OFF.txt
 					elif [[ $read2 == 'OFF_switch_region' ]] && [[ $read1 == 'OFF_left_flank' ]]
 					then
 						OFF_1=$(($OFF_1 + 1))	
 #						echo "adding to OFF_1"
-						echo $name >> mapped_reads_OFF.txt
+#						echo $name >> mapped_reads_OFF.txt
 					
 					elif [[ $read1 == 'ON_switch_region' ]] && [[ $read2 == 'ON_right_flank' ]]
                                         then    
                                                 ON_2=$(($ON_2 + 1))
-                                                echo $name >> mapped_reads_ON.txt                  
+ #                                               echo $name >> mapped_reads_ON.txt                  
                                         elif [[ $read1 == 'ON_switch_region' ]] && [[ $read2 == 'ON_left_flank' ]]
                                         then    
                                                 ON_1=$(($ON_1 + 1))
-                                                echo $name >> mapped_reads_ON.txt
+  #                                              echo $name >> mapped_reads_ON.txt
                                         elif [[ $read2 == 'ON_switch_region' ]] && [[ $read1 == 'ON_right_flank' ]]
                                         then    
                                                 ON_2=$(($ON_2 + 1))
-                                                echo $name >> mapped_reads_ON.txt
+   #                                             echo $name >> mapped_reads_ON.txt
                                         elif [[ $read2 == 'ON_switch_region' ]] && [[ $read1 == 'ON_left_flank' ]]
                                         then    
                                                 ON_1=$(($ON_1 + 1))   
-                                                echo $name >> mapped_reads_ON.txt
+    #                                            echo $name >> mapped_reads_ON.txt
 
 					
 					fi
@@ -280,7 +262,7 @@ rm completed.reads
 
 for f in *
 do
-	if [[ $f == *.result.bed ]]
+	if [[ $f == *.sorted.bam ]]
 	then
 		NAME=$(echo $f | cut -f1 -d.)
 		mkdir ana_$NAME
