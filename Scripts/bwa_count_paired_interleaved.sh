@@ -62,7 +62,7 @@ done
 
 # Create a file for the output (with headers):
 
-echo "STRAIN,OFF_1,OFF_2,ON_1,ON_2" > fimS_OFF_ON_positions.csv
+echo "STRAIN,OFF_1,OFF_2,ON_1,ON_2,Ambiguous" > fimS_OFF_ON_positions.csv
 
 for f in *
 do
@@ -80,7 +80,8 @@ do
 		OFF_2=0
 		ON_1=0
 		ON_2=0
-		
+		Ambiguous=0
+		SAME_REGION=0	
 #		right_flank=0
 #		left_flank=0
 #		switch_region=0
@@ -190,72 +191,80 @@ do
 					then
 						OFF_2=$(($OFF_2 + 1))
 #						echo "adding to OFF_2"
-#						echo $name >> mapped_reads_OFF.txt		
+						echo $name >> mapped_reads_OFF.txt		
 					elif [[ $read1 == 'OFF_switch_region' ]] && [[ $read2 == 'OFF_left_flank' ]]
 					then
 						OFF_1=$(($OFF_1 + 1))
 #						echo "adding to OFF_1"
-#						echo $name >> mapped_reads_OFF.txt
+						echo $name >> mapped_reads_OFF.txt
 					elif [[ $read2 == 'OFF_switch_region' ]] && [[ $read1 == 'OFF_right_flank' ]]
 					then
                         			OFF_2=$(($OFF_2 + 1))
 #						echo "adding to OFF_2"
-#						echo $name >> mapped_reads_OFF.txt
+						echo $name >> mapped_reads_OFF.txt
 					elif [[ $read2 == 'OFF_switch_region' ]] && [[ $read1 == 'OFF_left_flank' ]]
 					then
 						OFF_1=$(($OFF_1 + 1))	
 #						echo "adding to OFF_1"
-#						echo $name >> mapped_reads_OFF.txt
+						echo $name >> mapped_reads_OFF.txt
 					
 					elif [[ $read1 == 'ON_switch_region' ]] && [[ $read2 == 'ON_right_flank' ]]
                                         then    
                                                 ON_2=$(($ON_2 + 1))
- #                                               echo $name >> mapped_reads_ON.txt                  
+                                                echo $name >> mapped_reads_ON.txt                  
                                         elif [[ $read1 == 'ON_switch_region' ]] && [[ $read2 == 'ON_left_flank' ]]
                                         then    
                                                 ON_1=$(($ON_1 + 1))
-  #                                              echo $name >> mapped_reads_ON.txt
+                                                echo $name >> mapped_reads_ON.txt
                                         elif [[ $read2 == 'ON_switch_region' ]] && [[ $read1 == 'ON_right_flank' ]]
                                         then    
                                                 ON_2=$(($ON_2 + 1))
-   #                                             echo $name >> mapped_reads_ON.txt
+                                                echo $name >> mapped_reads_ON.txt
                                         elif [[ $read2 == 'ON_switch_region' ]] && [[ $read1 == 'ON_left_flank' ]]
                                         then    
                                                 ON_1=$(($ON_1 + 1))   
-    #                                            echo $name >> mapped_reads_ON.txt
-
+                                                echo $name >> mapped_reads_ON.txt
+					elif [[ $read2 == 'ON*' ]] && [[ $read1 == 'OFF*' ]]
+					then
+						Ambiguous=$(($Ambiguous + 1))
+					elif [[ $read2 == 'OFF*' ]] && [[ $read1 == 'ON*' ]]
+					then
+						Ambiguous=$(($Ambiguous + 1))
 					
 					fi
 # Printing out results
-
-#				echo 'OFF_1 = ' $OFF_1
-#				echo 'OFF_2 = ' $OFF_2
-#				echo 'right_flank= ' $right_flank_no
-#				echo 'left_flank= ' $left_flank_no
-#				echo 'switch_region= ' $switch_region_no
-#				echo 'read_count = ' $readcount
-
+				else
+					SAME_REGION=$(($SAME_REGION + 1))
 				fi
+
 			fi
 
 		done <readnames.sorted
 
+echo 'OFF_1 = ' $OFF_1
+echo 'OFF_2 = ' $OFF_2
+echo 'ON_1 = ' $ON_1
+echo 'ON_2 = ' $ON_2
+echo 'Ambiguous= ' $Ambiguous
+echo 'read_count = ' $readcount
+echo 'Reads in same region = ' $SAME_REGION
+
 # Creating a csv file for the results output
 
 	NAME=$(ls $f | cut -f1 -d.)
-	echo $NAME','$OFF_1','$OFF_2','$ON_1','$ON_2 >> fimS_OFF_ON_positions.csv
+	echo $NAME','$OFF_1','$OFF_2','$ON_1','$ON_2','$Ambiguous >> fimS_OFF_ON_positions.csv
 	
 	echo "completed.reads removed"	
-	rm completed.reads	
+#	rm completed.reads	
 	fi
 done
 
 # Cleaning up files:
 
-rm readnames
-rm readnames.sorted
+#rm readnames
+#rm readnames.sorted
 rm position.txt
-rm completed.reads
+#rm completed.reads
 #rm *.fastq
 
 # Move all of the files into directories of their own

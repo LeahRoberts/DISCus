@@ -60,7 +60,7 @@ do
                                 name2=$(echo $f | cut -f1-2 -d.)
 #                               echo $name2             
                 
-                                if [[ $(echo $name1 | cut -f1 -d.) == $(ls $name2 | cut -f1 -d.) ]]
+                                if [[ $(echo $name1 | cut -f1 -d.) == $(echo $name2 | cut -f1 -d.) ]]
                                 then
                                         bwa sampe $REFERENCE $name1.sai $name2.sai $name1.fastq $name2.fastq > $name.sam
                                         samtools view -bS -F 4 $name.sam > $name.bam
