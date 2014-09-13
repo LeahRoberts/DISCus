@@ -52,7 +52,3 @@ Then the bed file should look like this::
 
 
  
-Errors with Script
---------------------
-
-Strains with similar names (eg. HVM5 and HVM52) have a tendency to incorrectly align together. To solve this, I have been separating files with similar names and running the script in separate directories. 
