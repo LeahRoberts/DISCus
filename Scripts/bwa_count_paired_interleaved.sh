@@ -227,14 +227,17 @@ do
 					elif [[ $read2 == 'ON*' ]] && [[ $read1 == 'OFF*' ]]
 					then
 						Ambiguous=$(($Ambiguous + 1))
+						echo $name >> ambiguous.txt
 					elif [[ $read2 == 'OFF*' ]] && [[ $read1 == 'ON*' ]]
 					then
 						Ambiguous=$(($Ambiguous + 1))
+						echo $name >> ambiguous.txt
 					
 					fi
 # Printing out results
 				else
 					SAME_REGION=$(($SAME_REGION + 1))
+					echo $name >> same_region.txt
 				fi
 
 			fi
