@@ -39,14 +39,26 @@ do
 		if [[ $f == *_R1.fastq.gz ]]
 		then
 			gunzip $f
+			read1=$(echo $f | cut -f1-2 -d.)
 			name1=$(echo $f | cut -f1 -d.)
-			bwa aln $REFERENCE $f > $name1.sai
+			bwa aln $REFERENCE $read1 > $name1.sai
 		
 		elif [[ $f == *_R2.fastq.gz ]]
 		then
 			gunzip $f
+			read2=$(echo $f | cut -f1-2 -d.)
 			name2=$(echo $f | cut -f1 -d.)	
-			bwa aln $REFERENCE $f > $name2.sai
+			bwa aln $REFERENCE $read2 > $name2.sai
+		
+		elif [[ $f == *_R1.fastq ]]
+		then
+			name1=$(echo $f | cut -f1 -d.)
+                        bwa aln $REFERENCE $f > $name1.sai
+		
+		elif [[ $f == *_R2.fastq ]]
+		then	
+			name2=$(echo $f | cut -f1 -d.)
+                        bwa aln $REFERENCE $f > $name2.sai
 	fi
 done
 
@@ -82,8 +94,8 @@ do
                         			samtools view -bS -f 0x0002 -F 4 $name.sam > $name.bam
                         			samtools sort $name.bam $name.sorted
                         			samtools index $name.sorted.bam
-						rm $f
-						rm $g
+					#	rm $f
+					#	rm $g
 						rm $name.sam
                     			else
                         			echo $f " and " $g " are not a pair"
@@ -105,8 +117,8 @@ do
                             			samtools view -bS -f 0x0002 -F 4 $name.sam > $name.bam
                             			samtools sort $name.bam $name.bam.sorted
                             			samtools index $name.bam.sorted
-						rm $f
-						rm $g
+					#	rm $f
+					#	rm $g
 						rm $name.sam
                         		else
                         			echo $f "and" $g "are not a pair"
@@ -166,7 +178,7 @@ do
     	fi
 done
 
-# echo "finished creating csv file"
+echo "finished creating csv file containing bedmaps results"
 
 # This next section counts the number of read-pairs that overlap the 3 regions, namely Left Flank, Switch Region, 
 # and Right Flank.
@@ -187,7 +199,7 @@ do
 		echo "assigning reads to..."$f
 
 		readcount=$(wc -l readnames.sorted)
-				
+	
 		OFF_1=0
 		OFF_2=0
 		ON_1=0
@@ -336,7 +348,7 @@ do
 
 # Creating a csv file for the results output
 
-	NAME=$(ls $f | cut -f1 -d.)
+	NAME=$(echo $f | cut -f1 -d.)
 	echo $NAME','$OFF_1','$OFF_2','$ON_1','$ON_2 >> fimS_OFF_ON_positions.csv
 	
 	echo "completed.reads removed"	
