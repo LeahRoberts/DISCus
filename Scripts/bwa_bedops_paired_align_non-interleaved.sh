@@ -36,17 +36,17 @@ do
 # FORMATTED CORRECTLY (i.e. $strainname_1.fastq).
 	echo "processing $(echo $f | cut -f1 -d.)"
 
-		if [[ $f == *_R1.fastq ]]
+		if [[ $f == *_R1.fastq.gz ]]
 		then
-			read1=$f
+			gunzip $f
 			name1=$(echo $f | cut -f1 -d.)
-			bwa aln $REFERENCE $read1 > $name1.sai
+			bwa aln $REFERENCE $f > $name1.sai
 		
-		elif [[ $f == *_R2.fastq ]]
+		elif [[ $f == *_R2.fastq.gz ]]
 		then
-			read2=$f
+			gunzip $f
 			name2=$(echo $f | cut -f1 -d.)	
-			bwa aln $REFERENCE $read2 > $name2.sai
+			bwa aln $REFERENCE $f > $name2.sai
 	fi
 done
 
@@ -82,6 +82,9 @@ do
                         			samtools view -bS -f 0x0002 -F 4 $name.sam > $name.bam
                         			samtools sort $name.bam $name.sorted
                         			samtools index $name.sorted.bam
+						rm $f
+						rm $g
+						rm $name.sam
                     			else
                         			echo $f " and " $g " are not a pair"
 
@@ -102,7 +105,9 @@ do
                             			samtools view -bS -f 0x0002 -F 4 $name.sam > $name.bam
                             			samtools sort $name.bam $name.bam.sorted
                             			samtools index $name.bam.sorted
-
+						rm $f
+						rm $g
+						rm $name.sam
                         		else
                         			echo $f "and" $g "are not a pair"
                         		fi
@@ -120,12 +125,7 @@ done
 
 for f in *
 do
-        if [[ $f == *.sam ]]
-        then
-                echo "deleting " $f
-                rm $f
-
-        elif [[ $f == *.sai ]]
+        if [[ $f == *.sai ]]
         then
                 echo "deleting " $f
                 rm $f
@@ -195,9 +195,6 @@ do
 		DIFF_REGION=0
 		SAME_REGION=0
 		
-#		right_flank=0
-#		left_flank=0
-#		switch_region=0
 # The next loop reads in the 'readnames.sorted' file which contains all of the read IDs. As there are two
 # reads with the same ID, the script will generate twice as many overlaps as the actual amount.
 # To account for this, the script checks the current read ID against a list of already analysed read IDs.
