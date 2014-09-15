@@ -94,8 +94,8 @@ do
                         			samtools view -bS -f 0x0002 -F 4 $name.sam > $name.bam
                         			samtools sort $name.bam $name.sorted
                         			samtools index $name.sorted.bam
-					#	rm $f
-					#	rm $g
+						rm $f
+						rm $g
 						rm $name.sam
                     			else
                         			echo $f " and " $g " are not a pair"
@@ -117,8 +117,8 @@ do
                             			samtools view -bS -f 0x0002 -F 4 $name.sam > $name.bam
                             			samtools sort $name.bam $name.bam.sorted
                             			samtools index $name.bam.sorted
-					#	rm $f
-					#	rm $g
+						rm $f
+						rm $g
 						rm $name.sam
                         		else
                         			echo $f "and" $g "are not a pair"
@@ -348,12 +348,12 @@ do
 
 # Creating a csv file for the results output
 
+	rm readnames.sorted
+
 	NAME=$(echo $f | cut -f1 -d.)
 	echo $NAME','$OFF_1','$OFF_2','$ON_1','$ON_2 >> fimS_OFF_ON_positions.csv
 	
-	echo "completed.reads removed"	
-	rm completed.reads	
-
+	
 	fi
 done
 
@@ -362,7 +362,6 @@ done
 rm readnames
 rm readnames.sorted
 rm position.txt
-#rm *.fastq
 
 # Move all of the files into directories of their own
 
