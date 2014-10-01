@@ -97,8 +97,6 @@ do
 						rm $f
 						rm $g
 						rm $name.sam
-                    			else
-                        			echo $f " and " $g " are not a pair"
 
                     			fi
                 		done
@@ -120,8 +118,6 @@ do
 						rm $f
 						rm $g
 						rm $name.sam
-                        		else
-                        			echo $f "and" $g "are not a pair"
                         		fi
                 		done
             		fi
@@ -166,7 +162,6 @@ for f in *
 do
 	if [[ $f == *.result.bed ]]
     	then
-		echo $f
 		NAME=$(echo $f | cut -f1 -d.) 
 		OFF_1=$(head -1 $f | cut -f2 -d\|)
         	OFF_2=$(head -2 $f | tail -1 | cut -f2 -d\|)
@@ -360,7 +355,6 @@ done
 # Cleaning up files:
 
 rm readnames
-rm readnames.sorted
 rm position.txt
 
 # Move all of the files into directories of their own
