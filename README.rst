@@ -1,7 +1,7 @@
-BWA_Bedops_aligner
-==================
+Fimbrial Switch Counter - FiSC
+===============================
 
-Script for aligning illumina paired end reads with BWA and counting read overlap using: (1) Bedops; and (2) read-pairs traversing the desired region.
+Script for mapping illumina paired end reads with BWA and counting read overlap using: (1) Bedops; and (2) read-pairs traversing the desired region.
 
 How-To: Run Me
 ---------------
@@ -12,16 +12,22 @@ To run the script, simply type::
 
  bash <script> <REFERENCE> <BEDMAP_REFERENCE>
 
-The REFERENCE will serve as the reference for the read mapping. 
-The BEDMAP_REFERENCE will specify the location of the desired overlap regions.
+The REFERENCE will serve as the reference for the read mapping and should be in fasta format. 
+The BEDMAP_REFERENCE will specify the location of the desired overlap regions and should be in .bed format.
  
 *Note: this script has been modified to accept a particular format of data. See below for detailed formatting specifications.*
+
+File specifications
+----------------------
 
 For the script to work, the fastq files should be named in a way similar to this::
 
  $name_1.fastq
  $name_2.fastq
+ $name_1.fastq.gz
+ $name_2.fastq.gz
 
+The read files can be zipped or unzipped. 
 
 The specifications for the reference files are:
 
@@ -51,4 +57,15 @@ Then the bed file should look like this::
  EC958_fimpromoter_off_on_extended	3637	3647	.	.	+	artemis	exon	.	gene_id=exon:3638..3647
 
 
- 
+Output
+-------
+
+The script will generate directories for each strain containing the BAM and BAI files, and the bedmaps results. 
+**NOTE** that the script will delete the original fastq files and the SAM file.
+
+Two other files will also be created:
+
+1. fimS_OFF_ON_bed_results.csv - The concatenated results for the bedmaps counts of reads overlapping the provided exon locations
+2. fimS_OFF_ON_positions.csv - The concatenated results for the paired-end read counts which traverse the region of interest
+
+**NOTE**: The script works based on counting the overlapping reads for two orientations of an invertible DNA region. Thus, the input requires a REFERENCE with opposing orientations of an invertible DNA switch, arbitrarily named OFF and ON. The output assumes that the REFERENCE has been designed with OFF orientation first (i.e leftmost), and the ON orientation second. 
