@@ -4,7 +4,9 @@
 # Affiliations: Scott Beatson Lab Group - University of Queensland St Lucia
 # Date: October 2014
 
-############# Script Description ################
+###################### Script Description ################################
+
+############### fimS invertible DNA switch script ########################
 
 # This script is designed to align reads to a reference using BWA, and then count the 
 # number of reads overlapping predefined regions. This script generates two outputs: one
