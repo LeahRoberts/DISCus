@@ -1,7 +1,10 @@
-*fimS* Analysis - ST131_100 Dataset and Mutant EC958 strains
-=============================================================
+*fimS* Analysis 
+=================
 
-Analysis of the type 1 fimbriae invertible promoter (*fimS*) switching frequency in the ST131 lineage and in Mutant EC958 strains.
+Analysis of the type 1 fimbriae invertible promoter (*fimS*) switching frequency in two datasets:
+
+1. ST131 100 Dataset 
+2. EC958 Fimbrial Switch Mutant Strains
 
 Reference Files
 ----------------
