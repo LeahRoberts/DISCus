@@ -3,6 +3,13 @@ Fimbrial Switch Counter - FiSC
 
 Script for mapping illumina paired end reads with BWA and counting read overlap using: (1) Bedops; and (2) read-pairs traversing the desired region.
 
+Installation Requirements
+--------------------------
+
+1. BWA (http://sourceforge.net/projects/bio-bwa/files/)
+2. SAMtools (http://samtools.sourceforge.net/)
+3. Bedops - bedmaps (http://bedops.readthedocs.org/en/latest/) 
+
 How-To: Run Me
 ---------------
 
