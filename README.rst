@@ -19,20 +19,23 @@ To run the script, simply type::
 
  bash <script> <REFERENCE> <BEDMAP_REFERENCE>
  
- Construction of Reference
- --------------------------
 
-The REFERENCE will serve as the reference for the read mapping and should be in fasta format. 
-The BEDMAP_REFERENCE will specify the location of the desired overlap regions and should be in .bed format.
+Construction of Reference
+--------------------------
 
-The REFERENCE should contain the invertible DNA sequencev with 1000 bp flanking sequence for both orientations. For example:
+1. The REFERENCE will serve as the reference for the read mapping and should be in fasta format. 
+2. The BEDMAP_REFERENCE will specify the location of the desired overlap regions and should be in .bed format.
+
+The REFERENCE should contain the invertible DNA sequence with 1000 bp flanking sequence for both orientations. For example:
 
 ------------------>>>>>>>>>>------------------/------------------<<<<<<<<<<------------------
-    Flank_1      Orientation_1   Flank_2          Flank_1       Orientation_2   Flank_2
+
+------ = Flanking regions
+>>>>>> = Invertible DNA sequence, orientation 1
+<<<<<< = Invertible DNA sequence, orientation 2
  
-Flank_1 and Flank_2 remain the same, while the invertible DNA switch has been reverse complemented. In this way, both orientations are represented in the REFERENCE. 
+The flanking sequences remain the same for each orientation, while the invertible DNA switch should be reverse complemented. In this way, both orientations are represented in the REFERENCE. 
  
-*Note: this script has been modified to accept a particular format of data. See below for detailed formatting specifications.*
 
 File specifications
 ---------------------
