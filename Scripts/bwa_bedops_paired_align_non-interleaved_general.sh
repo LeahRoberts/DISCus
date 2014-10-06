@@ -4,6 +4,8 @@
 # Affiliations: Scott Beatson Lab Group - University of Queensland St Lucia
 # Date: October 2014
 
+############# General Script ####################
+
 ############# Script Description ################
 
 # This script is designed to align reads to a reference using BWA, and then count the 
@@ -162,7 +164,7 @@ do
 # This BEDMAP_REFERENCE file was generated using gff2bed (see README and bedops documentation). 
 
 # Taking the $name.sorted.bam files and converting them to .bed files, and then using bedmaps to count the 
-# reads overlapping the 'exon' regions (in this case, the borders of the invertible DNA switch for fimS).
+# reads overlapping the 'exon' regions (i.e. the borders of the invertible DNA region).
 # The results for each strain are saved as $name.result.bed.
 
 	elif [[ $f == *.sorted.bam ]] 
@@ -175,20 +177,24 @@ do
 done
 
 # Loop to parse all of the $name.result.bed file contents into a single result.csv file with the strain name identifier.
+# A_1 and A_2 refer to the left and right bordering regions (respectively) of the DNA switch given in the REFERENCE file 
+# at the leftmost position. 
+# Similarly, B_1 and B_2 refer to its reverse complement orientation, which should be at the rightmost position in the 
+# REFERENCE. 
 
-echo "STRAIN,OFF_1,OFF_2,ON_1,ON_2" > fimS_OFF_ON_bed_results.csv
+echo "STRAIN,A_1,A_2,B_1,B_2" > Bedmap_results.csv
 
 for f in *
 do
 	if [[ $f == *.result.bed ]]
     	then
 		NAME=$(echo $f | cut -f1 -d.) 
-		OFF_1=$(head -1 $f | cut -f2 -d\|)
-        	OFF_2=$(head -2 $f | tail -1 | cut -f2 -d\|)
-        	ON_1=$(tail -2 $f | head -1 | cut -f2 -d\|)
-        	ON_2=$(tail -1 $f | cut -f2 -d\|)
+		A_1=$(head -1 $f | cut -f2 -d\|)
+        	A_2=$(head -2 $f | tail -1 | cut -f2 -d\|)
+        	B_1=$(tail -2 $f | head -1 | cut -f2 -d\|)
+        	B_2=$(tail -1 $f | cut -f2 -d\|)
                         
-    		echo $NAME','$OFF_1','$OFF_2','$ON_1','$ON_2 >> fimS_OFF_ON_bed_results.csv
+    		echo $NAME','$A_1','$A_2','$B_1','$B_2 >> Bedmap_results.csv
 
     	fi
 done
@@ -197,6 +203,32 @@ echo "finished creating csv file containing bedmaps results"
 
 # The next section counts the number of read-pairs that overlap the 3 regions for each orientation, namely Left Flank, 
 # Switch Region and Right Flank.
+
+# These have been hardcoded in the past, however, to make the script more general these can now be entered in using 
+# a txt file containing the coordinates (coordinates.txt).
+
+# Formatting of the text file (should have the header and needs to be tab delimited):
+
+#	Region	Start	End
+#	A_left_flank	n/a	1000
+#	A_switch_region	1001	1313
+#	A_right_flank	1314	2313
+#	B_left_flank	2314	3313
+#	B_switch_region	3314	3626
+#	B_right_flank	3627	n/a
+
+# NOTE: Above is example coordinates.
+
+A1=$(head -2 coordinates.txt | tail -1 | cut -f3 -d$'\t')
+A2_1=$(head -3 coordinates.txt | tail -1 | cut -f2 -d$'\t')
+A2_2=$(head -3 coordinates.txt | tail -1 | cut -f3 -d$'\t')
+A3_1=$(head -4 coordinates.txt | tail -1 | cut -f2 -d$'\t')
+A3_2=$(head -4 coordinates.txt | tail -1 | cut -f3 -d$'\t')
+B1_1=$(head -5 coordinates.txt | tail -1 | cut -f2 -d$'\t')
+B1_2=$(head -5 coordinates.txt | tail -1 | cut -f3 -d$'\t')
+B2_1=$(tail -2 coordinates.txt | head -1 | cut -f2 -d$'\t')
+B2_2=$(tail -2 coordinates.txt | head -1 | cut -f3 -d$'\t')
+B3=$(tail -1 coordinates.txt | cut -f2 -d$'\t')
 
 for f in *
 do
@@ -211,15 +243,15 @@ do
 		sort readnames | uniq >> readnames.sorted
 		echo "assigning reads to..."$f
 		
-# The below variables are used to count the reads overlapping the regions of interest (i.e. OFF_1, OFF_2, ON_1, ON_2).
+# The below variables are used to count the reads overlapping the regions of interest (i.e. A_1,A_2,B_1,B_2).
 # The other remaining variables can be used to validate the script and check that it is running accordingly. 
 
 		readcount=$(wc -l readnames.sorted)
 	
-		OFF_1=0
-		OFF_2=0
-		ON_1=0
-		ON_2=0
+		A_1=0
+		A_2=0
+		B_1=0
+		B_2=0
 		DIFF_REGION=0
 		SAME_REGION=0
 		
@@ -236,57 +268,58 @@ do
  
 			samtools view $f | grep $name | cut -f4 -d$'\t' > position.txt
 				
-			
+
+
 			a=$(head -1 position.txt)
 			
-			if [ $a -le 1000 ]
+			if [ $a -le $A1 ]
 			then
 				read1='OFF_left_flank'
 				
-			elif [ $a -ge 1001 -a $a -le 1313 ]
+			elif [ $a -ge $A2_1 -a $a -le $A2_2 ]
 			then
 				read1='OFF_switch_region'
 				
-			elif [ $a -ge 1314 -a $a -le 2313 ]
+			elif [ $a -ge $A3_1 -a $a -le $A3_2 ]
 			then
 				read1='OFF_right_flank'
 				
-			elif [ $a -ge 2314 -a $a -le 3313 ]
+			elif [ $a -ge $B1_1 -a $a -le $B1_2 ]
 			then
 				read1='ON_left_flank'
 				
-			elif [ $a -ge 3314 -a $a -le 3626 ]
+			elif [ $a -ge $B2_1 -a $a -le $B2_1 ]
 			then
 				read1='ON_switch_region'
 				
-			elif [ $a -ge 3627 ]
+			elif [ $a -ge $B3 ]
 			then
 				read1='ON_right_flank'	
 			fi
 			
 			b=$(tail -1 position.txt)
 			
-			if [ $b -le 999 ]
+			if [ $b -le $A1 ]
 			then
 				read2='OFF_left_flank'
 			
-			elif [ $b -ge 1000 -a $b -le 1313 ]
+			elif [ $b -ge $A2_1 -a $b -le $A2_2 ]
 			then
 				read2='OFF_switch_region'
 			
-			elif [ $b -ge 1314 -a $b -le 2313 ]
+			elif [ $b -ge $A3_1 -a $b -le $A3_2 ]
 			then
 				read2='OFF_right_flank'
 				
-			elif [ $b -ge 2314 -a $b -le 3313 ]
+			elif [ $b -ge $B1_1 -a $b -le $B1_2 ]
                         then
                                 read2='ON_left_flank'
                                
-			elif [ $b -ge 3314 -a $b -le 3626 ]
+			elif [ $b -ge $B2_1 -a $b -le $B2_2 ]
                         then
                                 read2='ON_switch_region'
                                 
-			elif [ $b -ge 3627 ]
+			elif [ $b -ge $B3 ]
                         then
                                 read2='ON_right_flank'
 			fi
@@ -305,42 +338,42 @@ do
 				
 				if [[ $read1 == 'OFF_switch_region' ]] && [[ $read2 == 'OFF_right_flank' ]]
 				then
-					OFF_2=$(($OFF_2 + 1))
+					A_2=$(($A_2 + 1))
 					echo $name >> mapped_reads_OFF.txt		
 				
 				elif [[ $read1 == 'OFF_switch_region' ]] && [[ $read2 == 'OFF_left_flank' ]]
 				then
-					OFF_1=$(($OFF_1 + 1))
+					A_1=$(($A_1 + 1))
 					echo $name >> mapped_reads_OFF.txt
 				
 				elif [[ $read2 == 'OFF_switch_region' ]] && [[ $read1 == 'OFF_right_flank' ]]
 				then
-					OFF_2=$(($OFF_2 + 1))
+					A_2=$(($A_2 + 1))
 					echo $name >> mapped_reads_OFF.txt
 				
 				elif [[ $read2 == 'OFF_switch_region' ]] && [[ $read1 == 'OFF_left_flank' ]]
 				then
-					OFF_1=$(($OFF_1 + 1))	
+					A_1=$(($A_1 + 1))	
 					echo $name >> mapped_reads_OFF.txt
 				
 				elif [[ $read1 == 'ON_switch_region' ]] && [[ $read2 == 'ON_right_flank' ]]
                                 then    
-                                        ON_2=$(($ON_2 + 1))
+                                        B_2=$(($B_2 + 1))
                                         echo $name >> mapped_reads_ON.txt                  
                                 
 				elif [[ $read1 == 'ON_switch_region' ]] && [[ $read2 == 'ON_left_flank' ]]
                                 then    
-                                        ON_1=$(($ON_1 + 1))
+                                        B_1=$(($B_1 + 1))
                                         echo $name >> mapped_reads_ON.txt
                                 
 				elif [[ $read2 == 'ON_switch_region' ]] && [[ $read1 == 'ON_right_flank' ]]
                                 then    
-                                        ON_2=$(($ON_2 + 1))
+                                        B_2=$(($B_2 + 1))
                                         echo $name >> mapped_reads_ON.txt
                                 
 				elif [[ $read2 == 'ON_switch_region' ]] && [[ $read1 == 'ON_left_flank' ]]
                                 then    
-                                        ON_1=$(($ON_1 + 1))   
+                                        B_1=$(($B_1 + 1))   
                                         echo $name >> mapped_reads_ON.txt
 
 				fi
@@ -352,10 +385,10 @@ do
 
 ### Printing out results (optional)
 
-#	echo 'OFF_1 = ' $OFF_1
-#       echo 'OFF_2 = ' $OFF_2
-#	echo 'ON_1 = ' $ON_1
-#	echo 'ON_2 = ' $ON_2
+#	echo 'A_1 = ' $A_1
+#       echo 'A_2 = ' $A_2
+#	echo 'B_1 = ' $B_1
+#	echo 'B_2 = ' $B_2
 #       echo 'read_count = ' $readcount
 #       echo "reads in the same region = " $SAME_REGION
 #       echo "reads in different regions = " $DIFF_REGION   
@@ -366,7 +399,7 @@ do
 	rm readnames.sorted
 
 	NAME=$(echo $f | cut -f1 -d.)
-	echo $NAME','$OFF_1','$OFF_2','$ON_1','$ON_2 >> fimS_OFF_ON_positions.csv
+	echo $NAME','$A_1','$A_2','$B_1','$B_2 >> Paired_read_results.csv
 	
 	
 	fi
