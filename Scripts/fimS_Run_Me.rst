@@ -37,6 +37,7 @@ Output
 * Two csv files, containing the concatenated results of the bedmaps analysis and the paired-end read analysis.
 
 The csv files are formatted: "strain_name,OFF_1,OFF_2,ON_1,ON_2". 
+
 * OFF_1/ON_1 refers to the left border of the OFF/ON orientation, where OFF_2/ON_2 refers to the right border. 
 
 
