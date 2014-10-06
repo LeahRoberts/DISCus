@@ -1,22 +1,30 @@
 #!/bin/bash
 
+# Author: Leah Roberts
+# Affiliations: Scott Beatson Lab Group - University of Queensland St Lucia
+# Date: October 2014
+
+#################### Script Description ##########################
+
+############# HyxR Invertible DNA switch Script ##################
+
 # This script is designed to align reads to a reference using BWA, and then count the 
 # number of reads overlapping predefined regions. This script generates two outputs: one
 # output describes the number of reads physically overlapping the predefined regions, and
 # another output describing read-pairs that span across the desired regions.
 
 # The script should be run from inside the directory with the fastq reads: 
+
 # $ bash <script.sh> $REFERENCE $BEDMAP_REFERENCE
 
 # It is very important that the fastq files are formatted correctly for the script to work:
-# 	strain_R1.fastq
-# 	strain_R2.fastq
+# 	name_1.fastq
+# 	name_2.fastq
 
-# The REFERENCE is what the reads will be mapped to. It should be in the format ../reference.fa
+# Reads will be mapped to the REFERENCE. It should be in the format ../reference.fa
 # the BEDMAP_REFERENCE defines the desired regions. It should be in the format ../bedmap_format.fa
+# To find out more, please read the README file available on Github (https://github.com/LeahRoberts/FiSC). 
 
-# Make sure that the .fa and .bed references are compatible (i.e. same sequence name - refer to the README). 
-# Also check that the .bed reference contains exon features (not just CDS).
 
 REFERENCE=$1
 BEDMAP_REFERENCE=$2
@@ -26,36 +34,36 @@ echo "indexing " $REFERENCE
 bwa index $REFERENCE
 
 # Write a loop that will generate .sai files by reading each of the paired strains to the 
-# reference strain using the tool BWA. These are outputted as $strain-name_1.sai or $strain-name_2.sai.
+# reference strain using the tool BWA. These are outputted as $name_1.sai or $name_2.sai.
 
 for f in * 
 
 do
 
 # Used cut to parse out the strain name - THIS WILL ONLY WORK IF THE FASTQ FILE IS 
-# FORMATTED CORRECTLY (i.e. $strainname_1.fastq).
+# FORMATTED CORRECTLY (i.e. $name_1.fastq).
 	echo "processing $(echo $f | cut -f1 -d.)"
 
-		if [[ $f == *_R1.fastq.gz ]]
+		if [[ $f == *_1.fastq.gz ]]
 		then
 			gunzip $f
 			read1=$(echo $f | cut -f1-2 -d.)
 			name1=$(echo $f | cut -f1 -d.)
 			bwa aln $REFERENCE $read1 > $name1.sai
 		
-		elif [[ $f == *_R2.fastq.gz ]]
+		elif [[ $f == *_2.fastq.gz ]]
 		then
 			gunzip $f
 			read2=$(echo $f | cut -f1-2 -d.)
 			name2=$(echo $f | cut -f1 -d.)	
 			bwa aln $REFERENCE $read2 > $name2.sai
 		
-		elif [[ $f == *_R1.fastq ]]
+		elif [[ $f == *_1.fastq ]]
 		then
 			name1=$(echo $f | cut -f1 -d.)
                         bwa aln $REFERENCE $f > $name1.sai
 		
-		elif [[ $f == *_R2.fastq ]]
+		elif [[ $f == *_2.fastq ]]
 		then	
 			name2=$(echo $f | cut -f1 -d.)
                         bwa aln $REFERENCE $f > $name2.sai
@@ -63,55 +71,65 @@ do
 done
 
 # Write another loop that will take the .sai files from the previous section, and map them 
-# to the reference strain generating .sam and .bam files.
+# to the reference strain generating the .bam file.
 
 for f in *
 do
 	if [[ $f == *fastq ]]
 	then
 
-# Parse out just the name of the strain (again, in the format $strainname_1.fastq). 
+# Parse out just the name of the strain (again, with read names in the format $name_1.fastq). 
 		name=$(echo $f | cut -f1 -d_)
 		
 # Want to only perform the alignment once - as there are two .sai files, this has the 
 # potential to interate through twice. This if statement prevents the script from 
 # iterating through more than once on the same strain:
+
 		if [[ ! -e $name.bam ]]
 		then
 			echo "checking for pairs - " $name
 
-            		if [[ $(echo $f | cut -f1 -d. | cut -f2 -d_) == "R1" ]]
+            		if [[ $(echo $f | cut -f1 -d. | cut -f2 -d_) == "1" ]]
             		then
             			name1=$f
             			echo "first paired read = " $name1
-# Make sure that the names of paired files (.sai and .fastq) are the SAME and that the SAME strain files are being aligned to the reference (again using BWA):
+            			
+# The next loop makes sure that the names of paired files (.sai and .fastq) are the SAME and that the SAME strain files are being aligned to the reference (again using BWA):
                 		for g in *
                 		do
-                			if [[ $(echo $g | cut -f2 -d_) == "R2.fastq" ]] && [[ $(echo $g | cut -f1 -d_) == $name ]]
+                			if [[ $(echo $g | cut -f2 -d_) == "2.fastq" ]] && [[ $(echo $g | cut -f1 -d_) == $name ]]
                     			then
                     				echo $f "and" $g "are a pair - performing alignment"
-                        			bwa sampe $REFERENCE $name\_R1.sai $name\_R2.sai $f $g > $name.sam
+                        			bwa sampe $REFERENCE $name\_1.sai $name\_2.sai $f $g > $name.sam
+                    
+# '-f 0x0002' tells Samtools to only take properly mapped pairs, and '-F 4' tells samtools to only take the reads that have
+# mapped to the reference:                       			
                         			samtools view -bS -f 0x0002 -F 4 $name.sam > $name.bam
                         			samtools sort $name.bam $name.sorted
                         			samtools index $name.sorted.bam
+                        			
+# NOTE: The script will delete the original fastq files and the .sam file. These commands should be commented out if using 
+# the script for the first time, or if the user prefers to keep these files:
 						rm $f
 						rm $g
 						rm $name.sam
 
                     			fi
                 		done
+                		
+# The below loop is exactly the same as the one prior, except it is designed to take in "read2" files.                		
 
-			elif [[ $(echo $f | cut -f1 -d. | cut -f2 -d_) == "R2" ]]
+			elif [[ $(echo $f | cut -f1 -d. | cut -f2 -d_) == "2" ]]
          		then
                     		name2=$f
                     		echo "second paired read = " $name2
 
                     		for g in *
                     		do
-                    			if [[ $(echo $g | cut -f2 -d_) == "R1.fastq" ]] && [[ $(echo $g | cut -f1 -d_) == $name ]]
+                    			if [[ $(echo $g | cut -f2 -d_) == "1.fastq" ]] && [[ $(echo $g | cut -f1 -d_) == $name ]]
                         		then
                         			echo $f "and" $g "are a pair"
-                            			bwa sampe $REFERENCE $name\_R1.sai $name\_R2.sai $g $f > $name.sam
+                            			bwa sampe $REFERENCE $name\_1.sai $name\_2.sai $g $f > $name.sam
                             			samtools view -bS -f 0x0002 -F 4 $name.sam > $name.bam
                             			samtools sort $name.bam $name.bam.sorted
                             			samtools index $name.bam.sorted
@@ -127,9 +145,10 @@ do
 
 done
 
-# The above command should have generated the .sam and .bam alignment files for all the reads against the reference. 
+# The above command should have generated the .bam alignment file for all the reads against the reference. 
 
 # Getting rid of the .sai files to clean up the directory.
+
 echo "fastq files deleted"
 echo "sam files deleted"
 echo "Deleting sai files..."
@@ -177,14 +196,8 @@ done
 
 echo "finished creating csv file containing bedmaps results"
 
-# This next section counts the number of read-pairs that overlap the 3 regions, namely Left Flank, Switch Region, 
-# and Right Flank.
-
-# Assigning of variables to tally the amount of reads in each region.
-# Some of these variables also validates the correctness of the pre-generated bam file.
-  
-# Reads the sorted bam file and obtains all of the read IDs.
-# These are then sorted so that the paired reads are together.
+# This next section counts the number of read-pairs that overlap 3 regions for both orientations, namely Left Flank, 
+# Switch Region, and Right Flank.
 
 echo "STRAIN,OFF_1,OFF_2,ON_1,ON_2" > hyxR_OFF_ON_paired-end.csv
 
@@ -192,9 +205,19 @@ for f in *
 do
 	if [[ $f == *.sorted.bam ]]
 	then
+	
+# Reads the sorted bam file and obtains all of the read IDs.
+# These are then sorted, and duplicate read names are deleted. This ultimately results in a list of unique read names that
+# have mapped to the reference:
+
 		samtools view $f | cut -f1 -d$'\t' > readnames
 		sort readnames | uniq > readnames.sorted
 		echo "assigning reads to..."$f
+		
+# The OFF_1, OFF_2, ON_1 and ON_2 variables are assigned to count the number of reads overlapping those regions of interest.
+# The other variables can be used to check the validity of the script. "readcount" gives the total number of unique reads, 
+# DIFF_REGION counts the number of read pairs that are in different regions, while SAME_REGION counts the number of read pairs 
+# that have mapped in the same region. DIFF_REGION plus SAME_REGION should equal readcount. 
 
 		readcount=$(wc -l readnames.sorted)
 	
@@ -205,11 +228,7 @@ do
 		DIFF_REGION=0
 		SAME_REGION=0
 		
-# The next loop reads in the 'readnames.sorted' file which contains all of the read IDs. As there are two
-# reads with the same ID, the script will generate twice as many overlaps as the actual amount.
-# To account for this, the script checks the current read ID against a list of already analysed read IDs.
-# If the read ID exists in the list, it doesn't proceed with the rest of the loop, and adds a '+1' to the readcount tally. 
-# If it doesn't exist, it adds the read name to the list and carries out the appropriate analysis. 
+# The next loop reads in the 'readnames.sorted' file which contains all of the read IDs. 
 
 		while read name
 		do
@@ -217,7 +236,7 @@ do
 # obtained from the sorted bam file using 'grep' and cutting the fourth field (which is the coordinate field). 
 # This is temporarily saved in a 'positions.txt' file. Variable 'a' is then assigned one of these numbers,
 # while variable 'b' is assigned the other. The script then determines what region the read lies in based on its
-# starting coordinate, either 'left_flank' (0-999), 'switch_region' (1000-1313) or 'right_flank' (>=1314).
+# starting coordinate, either 'left_flank', 'switch_region' or 'right_flank' for either orientation.
  
 			samtools view $f | grep $name | cut -f4 -d$'\t' > position.txt
 				
@@ -281,7 +300,8 @@ do
 # reads that are in different regions. 
 # The next if statements encompass all of the possibilites for the read positions. Depending on
 # where the reads lie, a '+1' is added to the tally for either OFF_1 (i.e. read pairs in the left flank and 
-# in the switch region), or OFF_2 (i.e. read pairs in the right flank and in the switch region). 
+# in the switch region), or OFF_2 (i.e. read pairs in the right flank and in the switch region), and similarly
+# for the ON orientation.
 
 			if [[ $read1 != $read2  ]]
 			then
