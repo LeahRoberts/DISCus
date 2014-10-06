@@ -26,9 +26,9 @@ Or::
   
 *NOTE*: reads can be a combination of zipped or unzipped. The read pairs MUST have the same name.
 
-To run the script:
+To run the script::
 
-$ bwa_bedops_paired_align_non-interleaved_fimS.sh ../EC958_OFF_ON_alleles.fa ../EC958_10bps_only_off_on.bed
+  $ bwa_bedops_paired_align_non-interleaved_fimS.sh ../EC958_OFF_ON_alleles.fa ../EC958_10bps_only_off_on.bed
 
 Output
 -------
@@ -37,4 +37,4 @@ Output
 * Two csv files, containing the concatenated results of the bedmaps analysis and the paired-end read analysis.
 
 The csv files are formatted: "strain_name,OFF_1,OFF_2,ON_1,ON_2". 
-OFF_1/ON_1 refers to the left border of the OFF/ON orientation, where OFF_2/ON_2 refers to the right border. 
+* OFF_1/ON_1 refers to the left border of the OFF/ON orientation, where OFF_2/ON_2 refers to the right border. 
