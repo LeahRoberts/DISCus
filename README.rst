@@ -30,9 +30,9 @@ The REFERENCE should contain the invertible DNA sequence with 1000 bp flanking s
 
 ------------------>>>>>>>>>>------------------/------------------<<<<<<<<<<------------------
 
------- = Flanking regions
->>>>>> = Invertible DNA sequence, orientation 1
-<<<<<< = Invertible DNA sequence, orientation 2
+* ------ = Flanking regions
+* >>>>>> = Invertible DNA sequence, orientation 1
+* <<<<<< = Invertible DNA sequence, orientation 2
  
 The flanking sequences remain the same for each orientation, while the invertible DNA switch should be reverse complemented. In this way, both orientations are represented in the REFERENCE. 
  
