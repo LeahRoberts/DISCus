@@ -28,7 +28,7 @@ Or::
 
 To run the script::
 
-  $ bash bwa_bedops_paired_align_non-interleaved_fimS.sh ../EC958_OFF_ON_alleles.fa ../EC958_10bps_only_off_on.bed
+  $ bash FiSC_fimS.sh ../EC958_OFF_ON_alleles.fa ../EC958_10bps_only_off_on.bed
 
 Output
 -------
