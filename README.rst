@@ -50,9 +50,9 @@ The start and end coordinates for each region is necessary for the assignation o
 	B_switch_region	3314	3626
 	B_right_flank	3627	n/a
 	
-The 'n/a' regions are irrelevant as they represent the lower most and uppermost regions. The file needs to have the header, and should be **tab delimited**.
+The 'n/a' regions are irrelevant as they represent the lower most and uppermost regions. The file needs to have a header, and should be **tab delimited**.
 
-**The file needs to be called coordinates.txt** and should be in the directly above the reads.
+**The file needs to be called coordinates.txt** and should be in the directory above the reads.
 
 
 Construction of Bedmap_reference
