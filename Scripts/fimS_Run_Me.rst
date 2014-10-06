@@ -36,6 +36,9 @@ Output
 * Directories named for each strain in the analysis, containing the BAM and BAI files, as well as the bedmaps results file. 
 * Two csv files, containing the concatenated results of the bedmaps analysis and the paired-end read analysis.
 
+1. fimS_OFF_ON_bed_results.csv - results of the bedmaps analysis
+2. fimS_OFF_ON_positions.csv - results of the paired-end read analysis
+
 The csv files are formatted: "strain_name,OFF_1,OFF_2,ON_1,ON_2". 
 
 * OFF_1/ON_1 refers to the left border of the OFF/ON orientation, where OFF_2/ON_2 refers to the right border. 
