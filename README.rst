@@ -42,15 +42,17 @@ In order to count reads traversing the bordering regions of the invertible DNA s
 
 The start and end coordinates for each region is necessary for the assignation of reads to their correct region. Therefore, the script needs to read in a text file with these coordinate. The file needs to be in the below format, with the number changed accordingly::
 
-	Region	          Start     End
-	A_left_flank	    n/a       1000
-	A_switch_region	 1001	     1313
-	A_right_flank	   1314	     2313
-	B_left_flank	    2314	     3313
-	B_switch_region	 3314	     3626
-	B_right_flank	   3627	     n/a
+	Region	Start	End
+	A_left_flank	n/a	1000
+	A_switch_region	1001	1313
+	A_right_flank	1314	2313
+	B_left_flank	2314	3313
+	B_switch_region	3314	3626
+	B_right_flank	3627	n/a
 	
 The 'n/a' regions are irrelevant as they represent the lower most and uppermost regions. The file needs to have the header, and should be **tab delimited**.
+
+**The file needs to be called coordinates.txt** and should be in the directly above the reads.
 
 
 Construction of Bedmap_reference
