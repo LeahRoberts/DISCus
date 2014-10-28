@@ -31,7 +31,7 @@ Or::
 
 To run the script::
   
-  $ bash FiSC_hyxR.sh ../hyxR_pseudo_reference.fa ../hyxR_pseudo_reference_with_exons.bed
+  $ bash DiSCO_hyxR.sh ../hyxR_pseudo_reference.fa ../hyxR_pseudo_reference_with_exons.bed
   
 Output
 -------
