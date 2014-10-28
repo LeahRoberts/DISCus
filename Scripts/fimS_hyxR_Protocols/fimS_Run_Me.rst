@@ -1,10 +1,11 @@
 *fimS* Analysis 
 =================
 
-Analysis of the type 1 fimbriae invertible promoter (*fimS*) switching frequency in two datasets:
+Analysis of the type 1 fimbriae invertible promoter (*fimS*) switching frequency in three datasets:
 
 1. ST131 100 Dataset 
 2. EC958 Fimbrial Switch Mutant Strains
+3. Metagenomic Isolates (Willner *et al* 2014)
 
 Reference Files
 ----------------
@@ -31,7 +32,7 @@ Or::
 
 To run the script::
 
-  $ bash FiSC_fimS.sh ../EC958_OFF_ON_alleles.fa ../EC958_10bps_only_off_on.bed
+  $ bash DiSCO_fimS.sh ../EC958_OFF_ON_alleles.fa ../EC958_10bps_only_off_on.bed
 
 Output
 -------
