@@ -37,7 +37,7 @@ The flanking sequences remain the same for each orientation, while the invertibl
 
 Construction of Coordinates File:
 -----------------------------------
-*Only necessary to construct if looking at an invertible DNA region other than for fimS or hyxR*
+*Only necessary to construct if looking at an invertible DNA region other than fimS or hyxR*
 
 In order to count reads traversing the bordering regions of the invertible DNA switch, it is necessary to assign reads to any of 6 regions in the REFERENCE, as in the above figure (you'll notice that there are six regions - 4 flanking regions and 2 invertible switch regions in opposing orientations). Assuming that these orientations are OFF and ON, the six regions are OFF-left-flank, OFF-switch-region, OFF-right-region, and similarly for the ON orientation. 
 
