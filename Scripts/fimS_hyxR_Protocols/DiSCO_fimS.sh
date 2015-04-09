@@ -114,9 +114,9 @@ do
 
 # Removes the original fastq files and the SAM file. These should be commented out if using the script for the first time or 
 # if the user prefers to keep all the data:                        			
-						rm $f
-						rm $g
-						rm $name.sam
+#						rm $f
+#						rm $g
+#						rm $name.sam
 
                     			fi
                 		done
