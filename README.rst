@@ -15,7 +15,7 @@ File Requirements
 ------------------
 
 1. REFERENCE in fasta format (see below - 'Construction of Reference')
-2. BEDMAP_REFERENCE in bed format. (see below - 'Construction of Bedmap_reference')
+2. BEDMAP_REFERENCE in bed format. (see below - 'Construction of Reference' and 'Construction of Bedmap_reference')
 3. illumina paired-end read files (fastq) NOT interleaved (see below - Fastq File Format)
 4. Coordinates file (see below - 'Construction of Coordinates File')
 
@@ -25,20 +25,33 @@ Construction of Reference
 
 **Automated:**
 
-The python script, *CIRQUE_create_reference.py*, can automatically generate a pseudo-reference for analysis with DiSCO using a fasta file of the genome of interest.
-The script takes in three arguments and can be exected as shown below::
+The python script, *CIRQUE_create_reference.py*, can automatically generate a fasta pseudo-reference and bed file reference for analysis with DiSCO using a fasta file of the genome of interest.
+The script takes in four arguments and can be exected as shown below::
 
- $ python CIRQUE_create_reference.py <genome_sequence.fasta> <start_coordinate> <end_coordinate>
+ $ python CIRQUE_create_reference.py <genome_sequence.fasta> <start_coordinate> <end_coordinate> <filename>
  
-Where <start_coordinate> is the start of the invertible DNA region of interest, and <end_coordinate> is the end of the invertible DNA region.
-The script will also prompt you to enter the 'reference name', which will become the name of the output file as well as the fasta header. 
+Where <start_coordinate> is the start of the invertible DNA region of interest, and <end_coordinate> is the end of the invertible DNA region. The script also requires a filename, which will become the name of the output file as well as the fasta header. 
 
 The fasta header generated will be::
 
- > <name_of_reference_given>, <start_coordinate> .. <end_coordinate>
+ > <filename> _ <start_coordinate> _ <end_coordinate>
  Sequence...
  
 The sequence will include 1000 bp of flanking region, as well as both orientations of the invertible DNA region.
+
+**Example:**
+
+Using the EC958_complete.fasta genome as the input, and wanting a 100 bp inversion region between 182100 and 182200, the command to execute the script would be::
+ 
+  $ python CIRQUE_create_reference.py EC958_complete.fasta 182100 182200 EC958_100bp
+
+*Note: the script will not run unless all four arguments are given.*
+
+The output of this will be:
+
+1. a pseudo-reference with the header ">EC958_100bp_182100_182200"
+2. a bedmaps reference file indicating 10 bp overlap regions on either end of the invertible DNA region of interest (further explained in "Construction of Bedmap_reference" section)
+
 
 **Manual:**
 
@@ -79,6 +92,8 @@ The 'n/a' regions are irrelevant as they represent the lower most and uppermost 
 
 Construction of Bedmap_reference
 ----------------------------------
+
+**NOTE: this part can be automated now with a python script, as indicated above.**
 
 The BEDMAP_REFERENCE will specify the location of the desired overlap regions and should be in .bed format, which can be generated from a .gff file using gff2bed.
 
