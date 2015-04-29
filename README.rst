@@ -23,6 +23,27 @@ File Requirements
 Construction of Reference
 --------------------------
 
+**Automated:**
+
+The python script, *CIRQUE_create_reference.py*, can automatically generate a pseudo-reference for analysis with DiSCO using a fasta file of the genome of interest.
+The script takes in three arguments and can be exected as shown below::
+
+ $ python CIRQUE_create_reference.py <genome_sequence.fasta> <start_coordinate> <end_coordinate>
+ 
+Where <start_coordinate> is the start of the invertible DNA region of interest, and <end_coordinate> is the end of the invertible DNA region.
+The script will also prompt you to enter the 'reference name', which will become the name of the output file as well as the fasta header. 
+
+The fasta header generated will be::
+
+ > <name_of_reference_given>, <start_coordinate> .. <end_coordinate>
+ Sequence...
+ 
+The sequence will include 1000 bp of flanking region, as well as both orientations of the invertible DNA region.
+
+**Manual:**
+
+You can also construct the reference manually, as explained below. This section can also serve as further explanation regarding the pseudo-reference and theory of the script. 
+
 The REFERENCE will serve as the reference for the read mapping and should be in fasta format. 
 
 The REFERENCE should contain the invertible DNA sequence with 1000 bp flanking sequence for both orientations. For example:
