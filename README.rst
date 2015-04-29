@@ -45,7 +45,7 @@ Using the EC958_complete.fasta genome as the input, and wanting a 100 bp inversi
  
   $ python CIRQUE_create_reference.py EC958_complete.fasta 182100 182200 EC958_100bp
 
-*Note: the script will not run unless all four arguments are given.*
+*Note: the script will not run unless all four arguments are given. The filename argument should be without spaces.*
 
 The output of this will be:
 
