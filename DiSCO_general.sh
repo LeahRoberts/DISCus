@@ -114,8 +114,8 @@ do
 
 # Removes the original fastq files and the SAM file. These should be commented out if using the script for the first time or 
 # if the user prefers to keep all the data:                        			
-						rm $f
-						rm $g
+#						rm $f
+#						rm $g
 						rm $name.sam
 
                     			fi
@@ -137,8 +137,8 @@ do
                             			samtools view -bS -f 0x0002 -F 4 $name.sam > $name.bam
                             			samtools sort $name.bam $name.bam.sorted
                             			samtools index $name.bam.sorted
-						rm $f
-						rm $g
+#						rm $f
+#						rm $g
 						rm $name.sam
                         		fi
                 		done
@@ -409,6 +409,7 @@ done
 
 # Cleaning up unnecessary files:
 
+rm mapped_reads_*
 rm readnames
 rm position.txt
 
