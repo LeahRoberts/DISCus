@@ -219,16 +219,18 @@ echo "finished creating csv file containing bedmaps results"
 
 # NOTE: Above is example coordinates.
 
-A1=$(head -2 ../coordinates.txt | tail -1 | cut -f3 -d$'\t')
-A2_1=$(head -3 ../coordinates.txt | tail -1 | cut -f2 -d$'\t')
-A2_2=$(head -3 ../coordinates.txt | tail -1 | cut -f3 -d$'\t')
-A3_1=$(head -4 ../coordinates.txt | tail -1 | cut -f2 -d$'\t')
-A3_2=$(head -4 ../coordinates.txt | tail -1 | cut -f3 -d$'\t')
-B1_1=$(head -5 ../coordinates.txt | tail -1 | cut -f2 -d$'\t')
-B1_2=$(head -5 ../coordinates.txt | tail -1 | cut -f3 -d$'\t')
-B2_1=$(tail -2 ../coordinates.txt | head -1 | cut -f2 -d$'\t')
-B2_2=$(tail -2 ../coordinates.txt | head -1 | cut -f3 -d$'\t')
-B3=$(tail -1 ../coordinates.txt | cut -f2 -d$'\t')
+coordinates=$3
+
+A1=$(head -2 $coordinates | tail -1 | cut -f3 -d$'\t')
+A2_1=$(head -3 $coordinates | tail -1 | cut -f2 -d$'\t')
+A2_2=$(head -3 $coordinates | tail -1 | cut -f3 -d$'\t')
+A3_1=$(head -4 $coordinates | tail -1 | cut -f2 -d$'\t')
+A3_2=$(head -4 $coordinates | tail -1 | cut -f3 -d$'\t')
+B1_1=$(head -5 $coordinates | tail -1 | cut -f2 -d$'\t')
+B1_2=$(head -5 $coordinates | tail -1 | cut -f3 -d$'\t')
+B2_1=$(tail -2 $coordinates | head -1 | cut -f2 -d$'\t')
+B2_2=$(tail -2 $coordinates | head -1 | cut -f3 -d$'\t')
+B3=$(tail -1 $coordinates | cut -f2 -d$'\t')
 
 for f in *
 do
