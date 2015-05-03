@@ -1,4 +1,4 @@
-DiSCus - *D*\ NA *I*\nver\ *S*\ion *C*\ounter
+DISCus - *D*\ NA *I*\nver\ *S*\ion *C*\ounter
 ==========================================
 
 Script for mapping illumina paired end reads with BWA and counting read overlap using: (1) Bedops; and (2) read-pairs traversing the desired region.
@@ -158,3 +158,8 @@ Two other files will also be created:
 2. Paired_read_results.csv - The concatenated results for the paired-end read counts which traverse the region of interest
 
 **NOTE**: The script works based on counting the overlapping reads for two orientations of an invertible DNA region. Thus, the input requires a REFERENCE with opposing orientations of an invertible DNA switch, arbitrarily named OFF and ON. The output assumes that the REFERENCE has been designed with OFF orientation first (i.e leftmost), and the ON orientation second. 
+
+Licence
+--------
+
+All scripts and files within this directory are under the MIT Licence (http://choosealicense.com/licenses/mit/)
