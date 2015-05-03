@@ -116,3 +116,30 @@ os.remove("left_flank.fa")
 os.remove("right_flank.fa")
 os.remove("reverse_file.fa")
 os.remove("new_file.fa")
+
+
+#### Part 3: create coordinates file (if not using hyxR or fimS inversion regions)
+
+with open(name + "-coordinates.txt", "w") as f:
+        f.write("Region" + "\t" + "Start" + "\t" + "End" + "\n")
+
+A_left_flank = 1000
+A_switch_A = 1001 
+A_switch_B = 1000 + int(inv_length)
+A_right_A = int(A_switch_B) + 1
+A_right_B = int(A_switch_B) + 1000
+B_left_A = int(A_right_B) + 1
+B_left_B = int(A_right_B) + 1000
+B_switch_A = int(B_left_B) + 1
+B_switch_B = B_left_B + inv_length
+B_right_A = int(B_switch_B) + 1
+
+with open (name + "-coordinates.txt", "w") as f:
+	f.write("A_left_flank" + "\t" + "n/a" + "\t" + str(A_left_flank) + "\n")
+	f.write("A_switch_region" + "\t" + str(A_switch_A) + "\t" + str(A_switch_B) + "\n")
+	f.write("A_right_flank" + "\t" + str(A_right_A) + "\t" + str(A_right_B) + "\n")
+	f.write("B_left_flank" + "\t" + str(B_left_A) + "\t" + str(B_left_B) + "\n")
+	f.write("B_switch_region" + "\t" + str(B_switch_A) + "\t" + str(B_switch_B) + "\n")
+	f.write("B_right_flank" + "\t" + str(B_right_A) + "\t" + "n/a" + "\n")
+
+
