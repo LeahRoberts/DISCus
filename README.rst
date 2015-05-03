@@ -1,4 +1,4 @@
-DiSCus - *D*\ NA *S*\ w\ itch *CO*\unter
+DiSCus - *D*\ NA *I*\nver\ *S*\ion *CO*\unter
 ==========================================
 
 Script for mapping illumina paired end reads with BWA and counting read overlap using: (1) Bedops; and (2) read-pairs traversing the desired region.
@@ -17,7 +17,7 @@ File Requirements
 1. REFERENCE in fasta format (see below - 'Construction of Reference')
 2. BEDMAP_REFERENCE in bed format. (see below - 'Construction of Reference' and 'Construction of Bedmap_reference')
 3. illumina paired-end read files (fastq) NOT interleaved (see below - Fastq File Format)
-4. Coordinates file (see below - 'Construction of Coordinates File')
+4. Coordinates file (see below - 'Construction of Reference' and 'Construction of Coordinates File')
 
 
 Construction of Reference
@@ -25,7 +25,7 @@ Construction of Reference
 
 **Automated:**
 
-The python script, *CIRQUE_create_reference.py*, can automatically generate a fasta pseudo-reference and bed file reference for analysis with DiSCO using a fasta file of the genome of interest.
+The python script, *CIRQUE_create_reference.py*, can automatically generate a fasta pseudo-reference, bed file reference and coordinates file for analysis with DiSCO using a fasta file of the genome of interest.
 The script takes in four arguments and can be exected as shown below::
 
  $ python CIRQUE_create_reference.py <genome_sequence.fasta> <start_coordinate> <end_coordinate> <filename>
@@ -51,6 +51,7 @@ The output of this will be:
 
 1. a pseudo-reference with the header ">EC958_100bp_182100_182200"
 2. a bedmaps reference file indicating 10 bp overlap regions on either end of the invertible DNA region of interest (further explained in "Construction of Bedmap_reference" section)
+3. A coordinates file (txt) defining the regions of the pseudo-reference necessary for determining paired-end read traversal
 
 
 **Manual:**
@@ -72,6 +73,8 @@ The flanking sequences remain the same for each orientation, while the invertibl
 Construction of Coordinates File:
 -----------------------------------
 *Only necessary to construct if looking at an invertible DNA region other than fimS or hyxR*
+
+This process is now automated by a python script, as described above.
 
 In order to count reads traversing the bordering regions of the invertible DNA switch, it is necessary to assign reads to any of 6 regions in the REFERENCE, as in the above figure (you'll notice that there are six regions - 4 flanking regions and 2 invertible switch regions in opposing orientations). Assuming that these orientations are OFF and ON, the six regions are OFF-left-flank, OFF-switch-region, OFF-right-region, and similarly for the ON orientation. 
 
@@ -141,7 +144,7 @@ This bash scripts requires the reference sequences to have already been generate
 
 To run the script, simply type::
 
- bash <script> <REFERENCE> <BEDMAP_REFERENCE>
+ bash <script> <REFERENCE> <BEDMAP_REFERENCE> <COORDINATES_FILE>
 
 Output
 -------
