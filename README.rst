@@ -142,9 +142,13 @@ How-To: Run Me
 
 This bash scripts requires the reference sequences to have already been generated. Furthermore, the reads (illumina paired end - not interleaved) need to be in a directory below the reference files, and the bash script should be executed in the file containing the reads.
 
+To see a graphical explanation of the directory setup, please refer to the "DISCus_how_to_run.png" diagram.
+
 To run the script, simply type::
 
  bash <script> <REFERENCE> <BEDMAP_REFERENCE> <COORDINATES_FILE>
+
+Again, this is further explained in the "DISCus_how_to_run.png" diagram.
 
 Output
 -------
