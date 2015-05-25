@@ -1,4 +1,4 @@
-DISCus - *D*\ NA *I*\nver\ *S*\ion *C*\ounter
+DISCus - *D*NA *I*nver*S*ion *C*ounter
 ==========================================
 
 Script for mapping illumina paired end reads with BWA and counting read overlap using: (1) Bedops; and (2) read-pairs traversing the desired region.
