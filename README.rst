@@ -142,7 +142,7 @@ How-To: Run Me
 
 This bash scripts requires the reference sequences to have already been generated. Furthermore, the reads (illumina paired end - not interleaved) need to be in a directory below the reference files, and the bash script should be executed in the file containing the reads, according to this diagram:
 
-![](https://raw.github.com/LeahRoberts/DiSCus/blob/master/DISCus_how_to_run.png)
+![](https://github.com/LeahRoberts/DiSCus/blob/master/DISCus_how_to_run.png)
 
 
 Output
