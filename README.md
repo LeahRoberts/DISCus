@@ -28,14 +28,14 @@ Construction of Reference
 The python script, *CIRQUE_create_reference.py*, can automatically generate a fasta pseudo-reference, bed file reference and coordinates file for analysis with DiSCO using a fasta file of the genome of interest.
 The script takes in four arguments and can be exected as shown below::
 
- $ python CIRQUE_create_reference.py <genome_sequence.fasta> <start_coordinate> <end_coordinate> <filename>
+ 	$ python CIRQUE_create_reference.py <genome_sequence.fasta> <start_coordinate> <end_coordinate> <filename>
  
 Where <start_coordinate> is the start of the invertible DNA region of interest, and <end_coordinate> is the end of the invertible DNA region. The script also requires a filename, which will become the name of the output file as well as the fasta header. 
 
 The fasta header generated will be::
 
- > <filename> _ <start_coordinate> _ <end_coordinate>
- Sequence...
+ 	> <filename> _ <start_coordinate> _ <end_coordinate>
+	 Sequence...
  
 The sequence will include 1000 bp of flanking region, as well as both orientations of the invertible DNA region.
 
@@ -43,7 +43,7 @@ The sequence will include 1000 bp of flanking region, as well as both orientatio
 
 Using the EC958_complete.fasta genome as the input, and wanting a 100 bp inversion region between 182100 and 182200, the command to execute the script would be::
  
-  $ python CIRQUE_create_reference.py EC958_complete.fasta 182100 182200 EC958_100bp
+  	$ python CIRQUE_create_reference.py EC958_complete.fasta 182100 182200 EC958_100bp
 
 *Note: the script will not run unless all four arguments are given. The filename argument should be without spaces.*
 
@@ -102,25 +102,25 @@ The BEDMAP_REFERENCE will specify the location of the desired overlap regions an
 
 You can generate this by using Bedops::
 
- $ gff2bed < genes.gff > genes.bed
- $ bam2bed < reads.bam > reads.bed
+ 	$ gff2bed < genes.gff > genes.bed
+ 	$ bam2bed < reads.bam > reads.bed
 
 
 * It is very important that the nomenclature stays consistent between the reference sequences, particularly regarding the naming of the reference sequence. i.e. The fasta header for the reference should match that in the .bed file.*
 
 For example, if the reference fasta header looks like this::
 
- >EC958_fimpromoter_off_on_extended
- ATAAACATTAAGTTAACCATATCCATACAAAATACAATGGTTTATGTTCTTCAAAATAAA
- TAAACAAAATCATTCATAAATTTACACATCACTTAAATTCTCCTGTTTCCGCACTTTTTT
- CTTTATTTTTTAAGCAACTGGAAGTTAATCCACTGCAATCTATTGTTATATTGAATCAAA
+ 	>EC958_fimpromoter_off_on_extended
+ 	ATAAACATTAAGTTAACCATATCCATACAAAATACAATGGTTTATGTTCTTCAAAATAAA
+ 	TAAACAAAATCATTCATAAATTTACACATCACTTAAATTCTCCTGTTTCCGCACTTTTTT
+ 	CTTTATTTTTTAAGCAACTGGAAGTTAATCCACTGCAATCTATTGTTATATTGAATCAAA
 
 Then the bed file should look like this::
 
- EC958_fimpromoter_off_on_extended	1001	1011	.	.	+	artemis	exon	.	gene_id=exon:1002..1011
- EC958_fimpromoter_off_on_extended	1316	1326	.	.	+	artemis	exon	.	gene_id=exon:1317..1326
- EC958_fimpromoter_off_on_extended	3322	3332	.	.	+	artemis	exon	.	gene_id=exon:3323..3332
- EC958_fimpromoter_off_on_extended	3637	3647	.	.	+	artemis	exon	.	gene_id=exon:3638..3647
+ 	EC958_fimpromoter_off_on_extended	1001	1011	.	.	+	artemis	exon	.	gene_id=exon:1002..1011
+ 	EC958_fimpromoter_off_on_extended	1316	1326	.	.	+	artemis	exon	.	gene_id=exon:1317..1326
+ 	EC958_fimpromoter_off_on_extended	3322	3332	.	.	+	artemis	exon	.	gene_id=exon:3323..3332
+ 	EC958_fimpromoter_off_on_extended	3637	3647	.	.	+	artemis	exon	.	gene_id=exon:3638..3647
 
 The exons for the DNA switch analysis were created as 10 bp pseudo-exons overlapping each end of the DNA switch regions, totally 4 pseudo-exons regions. 
 
@@ -129,16 +129,20 @@ Fastq File Format
 
 For the script to work, the fastq files should be named in a way similar to this::
 
- $name_1.fastq
- $name_2.fastq
- $name_1.fastq.gz
- $name_2.fastq.gz
+ 	$name_1.fastq
+ 	$name_2.fastq
+ 	$name_1.fastq.gz
+ 	$name_2.fastq.gz
 
 The read files can be zipped or unzipped. 
 
 
 How-To: Run Me
 ---------------
+Simple overview::
+
+	$ bash DISCus_general.sh <PATH_to_fasta_ref> <PATH_to_bedmaps_ref> <PATH_to_coordinates_file>
+	
 
 This bash scripts requires the reference sequences to have already been generated. Furthermore, the reads (illumina paired end - not interleaved) need to be in a directory below the reference files, and the bash script should be executed in the file containing the reads, according to this diagram:
 
