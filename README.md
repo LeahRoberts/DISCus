@@ -25,7 +25,7 @@ Construction of Reference
 
 **Automated:**
 
-The python script, *DISCus_create_reference.py*, can automatically generate a fasta pseudo-reference, bed file reference and coordinates file for analysis with DiSCO using a fasta file of the genome of interest.
+The python script, *DISCus_create_reference.py*, can automatically generate a fasta pseudo-reference, bed file reference and coordinates file for analysis with DISCus using a fasta file of the genome of interest.
 The script takes in four arguments and can be exected as shown below::
 
  	$ python DISCus_create_reference.py <genome_sequence.fasta> <start_coordinate> <end_coordinate> <filename>
