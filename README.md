@@ -30,7 +30,7 @@ The script takes in four arguments and can be exected as shown below::
 
  	$ python DISCus_create_reference.py <genome_sequence.fasta> <start_coordinate> <end_coordinate> <filename>
  
-Where <start_coordinate> is the start of the invertible DNA region of interest, and <end_coordinate> is the end of the invertible DNA region. The script also requires a filename, which will become the name of the output file as well as the fasta header. 
+Where **start_coordinate** is the start of the invertible DNA region of interest, and **end_coordinate** is the end of the invertible DNA region. The script also requires a filename, which will become the name of the output file as well as the fasta header. 
 
 The fasta header generated will be::
 
