@@ -25,10 +25,10 @@ Construction of Reference
 
 **Automated:**
 
-The python script, *CIRQUE_create_reference.py*, can automatically generate a fasta pseudo-reference, bed file reference and coordinates file for analysis with DiSCO using a fasta file of the genome of interest.
+The python script, *DISCus_create_reference.py*, can automatically generate a fasta pseudo-reference, bed file reference and coordinates file for analysis with DiSCO using a fasta file of the genome of interest.
 The script takes in four arguments and can be exected as shown below::
 
- 	$ python CIRQUE_create_reference.py <genome_sequence.fasta> <start_coordinate> <end_coordinate> <filename>
+ 	$ python DISCus_create_reference.py <genome_sequence.fasta> <start_coordinate> <end_coordinate> <filename>
  
 Where <start_coordinate> is the start of the invertible DNA region of interest, and <end_coordinate> is the end of the invertible DNA region. The script also requires a filename, which will become the name of the output file as well as the fasta header. 
 
@@ -43,7 +43,7 @@ The sequence will include 1000 bp of flanking region, as well as both orientatio
 
 Using the EC958_complete.fasta genome as the input, and wanting a 100 bp inversion region between 182100 and 182200, the command to execute the script would be::
  
-  	$ python CIRQUE_create_reference.py EC958_complete.fasta 182100 182200 EC958_100bp
+  	$ python DISCus_create_reference.py EC958_complete.fasta 182100 182200 EC958_100bp
 
 *Note: the script will not run unless all four arguments are given. The filename argument should be without spaces.*
 
