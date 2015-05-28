@@ -153,7 +153,7 @@ Output
 -------
 
 The script will generate directories for each strain containing the BAM and BAI files, and the bedmaps results. 
-**NOTE** that the script will delete the original fastq files and the SAM file.
+
 
 Two other files will also be created:
 
