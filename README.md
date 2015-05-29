@@ -1,7 +1,18 @@
 DISCus - *D*NA *I*nver*S*ion *C*ounter
 ==========================================
 
-Script for mapping illumina paired end reads with BWA and counting read overlap using: (1) Bedops; and (2) read-pairs traversing the desired region.
+Simple Overview:
+----------------
+DISCus is a script for mapping illumina paired end reads with BWA to an invertible DNA pseudo-reference and counting read overlap using: (1) Bedops; and (2) read-pairs traversing the desired region.
+
+Basic Commands:
+---------------
+To generate references:
+	$ python DISCus_create_reference.py <file.fasta> <start_coordinate> <end_coordinate> <out_name>
+
+To run DISCus (with full path to files):
+
+	$ python ~/PATH/TO/DISCus/DISCus_general.sh <ref.fasta> <ref.bed> <coordinates.txt>
 
 Installation Requirements
 --------------------------
@@ -10,15 +21,27 @@ Installation Requirements
 2. SAMtools version: 1.2 (using htslib 1.2) (http://samtools.sourceforge.net/)
 3. Bedtools version: v2.23.0 (http://bedtools.readthedocs.org/en/latest/content/installation.html)
 4. Bedops version: 2.4.14 (http://bedops.readthedocs.org/en/latest/content/installation.html) 
-
+5. Python version: 2.7
+6. Biopython version: 1.64 (http://biopython.org/wiki/Main_Page)
 
 File Requirements
 ------------------
 
 1. REFERENCE in fasta format (see below - 'Construction of Reference')
 2. BEDMAP_REFERENCE in bed format. (see below - 'Construction of Reference' and 'Construction of Bedmap_reference')
-3. illumina paired-end read files (fastq) NOT interleaved (see below - Fastq File Format)
+3. illumina paired-end read files NOT interleaved, named: <strain>_1.fastq, _2.fastq (see below - Fastq File Format)
 4. Coordinates file (see below - 'Construction of Reference' and 'Construction of Coordinates File')
+
+
+DISCus Manual
+=============
+
+Introduction:
+-------------
+
+DISCus is a command-line tool created to interrogate inversion orientation of an invertible DNA region using Illumina paired-end sequencing data. First, a pseudo-reference is generated containing both orientations of a known invertible DNA region with 1 kb of flanking region for each orientation. Illumina paired-end reads are then mapped to this pseudo-reference, where reads will map primarily to whichever orientation was more represented in the bacterial population at the time of sequencing. Two methods are used to quantify the number of reads mapping to either orientation of the invertible region: (1) count the number of reads directly overlapping the unique bordering regions of both orientation, and (2) count the number of paired-reads that traverse from either flanking region to a switch region.
+
+By quantifying the amount of reads mapping to either orientation of a known invertible DNA region, DISCus is able to sensitively quantify the proportion of 'forward' and 'reverse' orientations within a bacterial population. 
 
 
 Construction of Reference
@@ -73,7 +96,6 @@ The flanking sequences remain the same for each orientation, while the invertibl
 
 Construction of Coordinates File:
 -----------------------------------
-*Only necessary to construct if looking at an invertible DNA region other than fimS or hyxR*
 
 This process is now automated by a python script, as described above.
 
@@ -91,21 +113,13 @@ The start and end coordinates for each region is necessary for the assignation o
 	
 The 'n/a' regions are irrelevant as they represent the lower most and uppermost regions. The file needs to have a header, and should be **tab delimited**.
 
-**The file needs to be called coordinates.txt** and should be in the directory above the reads.
-
 
 Construction of Bedmap_reference
 ----------------------------------
 
-**NOTE: this part can be automated now with a python script, as indicated above.**
+This process is now automated by a python script, as described above.
 
-The BEDMAP_REFERENCE will specify the location of the desired overlap regions and should be in .bed format, which can be generated from a .gff file using gff2bed.
-
-You can generate this by using Bedops::
-
- 	$ gff2bed < genes.gff > genes.bed
- 	$ bam2bed < reads.bam > reads.bed
-
+The BEDMAP_REFERENCE will specify the location of the desired overlap regions and should be in .bed format.
 
 * It is very important that the nomenclature stays consistent between the reference sequences, particularly regarding the naming of the reference sequence. i.e. The fasta header for the reference should match that in the .bed file.*
 
