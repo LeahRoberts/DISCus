@@ -6,9 +6,10 @@ Script for mapping illumina paired end reads with BWA and counting read overlap 
 Installation Requirements
 --------------------------
 
-1. BWA (http://sourceforge.net/projects/bio-bwa/files/)
-2. SAMtools (http://samtools.sourceforge.net/)
-3. Bedops - bedmaps (http://bedops.readthedocs.org/en/latest/) 
+1. BWA version: 0.7.12 (http://sourceforge.net/projects/bio-bwa/files/)
+2. SAMtools version: 1.2 (using htslib 1.2) (http://samtools.sourceforge.net/)
+3. Bedtools version: v2.23.0 (http://bedtools.readthedocs.org/en/latest/content/installation.html)
+4. Bedops version: 2.4.14 (http://bedops.readthedocs.org/en/latest/content/installation.html) 
 
 
 File Requirements
