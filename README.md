@@ -8,6 +8,7 @@ DISCus is a script for mapping illumina paired end reads with BWA to an invertib
 Basic Commands:
 ---------------
 To generate references:
+
 	$ python DISCus_create_reference.py <file.fasta> <start_coordinate> <end_coordinate> <out_name>
 
 To run DISCus (with full path to files):
