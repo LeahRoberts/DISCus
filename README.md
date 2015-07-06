@@ -54,7 +54,7 @@ Test Data
 *If you get errors, make sure python and biopython are correctly installed.*
 	
 
-**Step 5.** Check that all the files are correctly placed (fastq files in reads directory, all other files in directory above reads). 
+**Step 5.** Check that all the files are in the correct directory (fastq files in reads directory, all other files in directory above reads). 
 
 **Step 6.** Run DISCus from reads directory:
 
