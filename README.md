@@ -80,10 +80,12 @@ Where A_1 and A_2 indicate reads overlapping the first orientation in the pseudo
 As a percentage:
 
 (Bedmaps):
+
 	ERR161302 = 98% OFF
 	ERR161318 = 72% OFF
 
 (Paired Reads):
+
 	ERR161302 = 94% OFF
 	ERR161318 = 79% OFF
 
