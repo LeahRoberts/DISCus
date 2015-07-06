@@ -13,7 +13,7 @@ To generate references:
 
 To run DISCus (with full path to files):
 
-	$ python ~/PATH/TO/DISCus/DISCus_general.sh <ref.fasta> <ref.bed> <coordinates.txt>
+	$ bash ~/PATH/TO/DISCus/DISCus_general.sh <ref.fasta> <ref.bed> <coordinates.txt>
 
 Installation Requirements
 --------------------------
@@ -32,6 +32,61 @@ File Requirements
 2. BEDMAP_REFERENCE in bed format. (see below - 'Construction of Reference' and 'Construction of Bedmap_reference')
 3. illumina paired-end read files NOT interleaved, named: <strain>_1.fastq, _2.fastq (see below - Fastq File Format)
 4. Coordinates file (see below - 'Construction of Reference' and 'Construction of Coordinates File')
+
+
+Test Data
+==========
+
+**Step 1.** Make a directory called "reads".
+
+**Step 2.** Download the paired fastq files from EMBL-EBI for the ST131 strains S37EC (ERR161302) and HVM1147 (ERR161318) into the "reads" directory:
+
+	$ wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR161/ERR161302/ERR161302_*.fastq.gz
+	$ wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR161/ERR161318/ERR161318_*.fastq.gz
+	
+
+**Step 3.** Above the reads directory, download the complete genome for *Escherichia coli* O25b:H4-ST131 str. EC958 from NCBI (NZ_HG941718.1, GI:802098267) (complete fasta sequence).
+
+**Step 4.** Generate reference fasta, bed and coordinate files using the python script DISCus_create_reference.py:
+
+	$ python ~/PATH/TO/DISCus_create_reference.py EC958_complete.fasta 5018228 5018540 EC958_OFF_ON
+
+*If you get errors, make sure python and biopython are correctly installed.*
+	
+
+**Step 5.** Check that all the files are correctly placed (fastq files in reads directory, all other files in directory above reads). 
+
+**Step 6.** Run DISCus from reads directory:
+
+	$ bash ~/PATH/TO/DISCus_general.sh ../EC958_OFF_ON.fa ../EC958_OFF_ON.bed ../EC958_OFF_ON-coordinates.txt
+
+
+Output results should be:
+
+*Bedmaps results:*
+
+STRAIN,A_1,A_2,B_1,B_2
+ERR161302,61,70,3,0
+ERR161318,50,34,18,15
+
+*Paired_read_results:*
+
+ERR161302,39,43,4,1
+ERR161318,17,17,9,0
+
+
+Where A_1 and A_2 indicate reads overlapping the first orientation in the pseudo-reference (OFF), and B_1 and B_2 indicate reads overlapping the second orientation (ON). 
+
+As a percentage:
+
+(Bedmaps)
+ERR161302 = 98% OFF
+ERR161318 = 72% OFF
+
+(Paired Reads)
+ERR161302 = 94% OFF
+ERR161318 = 79% OFF
+
 
 
 DISCus Manual
@@ -157,7 +212,7 @@ How-To: Run Me
 ---------------
 Simple overview::
 
-	$ bash DISCus_general.sh <PATH_to_fasta_ref> <PATH_to_bedmaps_ref> <PATH_to_coordinates_file>
+	$ bash PATH/TO/DISCus_general.sh <PATH_to_fasta_ref> <PATH_to_bedmaps_ref> <PATH_to_coordinates_file>
 	
 
 This bash scripts requires the reference sequences to have already been generated. Furthermore, the reads (illumina paired end - not interleaved) need to be in a directory below the reference files, and the bash script should be executed in the file containing the reads, according to this diagram:
