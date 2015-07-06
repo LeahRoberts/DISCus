@@ -65,27 +65,27 @@ Output results should be:
 
 *Bedmaps results:*
 
-STRAIN,A_1,A_2,B_1,B_2
-ERR161302,61,70,3,0
-ERR161318,50,34,18,15
+	STRAIN,A_1,A_2,B_1,B_2
+	ERR161302,61,70,3,0
+	ERR161318,50,34,18,15
 
 *Paired_read_results:*
 
-ERR161302,39,43,4,1
-ERR161318,17,17,9,0
+	ERR161302,39,43,4,1
+	ERR161318,17,17,9,0
 
 
 Where A_1 and A_2 indicate reads overlapping the first orientation in the pseudo-reference (OFF), and B_1 and B_2 indicate reads overlapping the second orientation (ON). 
 
 As a percentage:
 
-(Bedmaps)
-ERR161302 = 98% OFF
-ERR161318 = 72% OFF
+(Bedmaps):
+	ERR161302 = 98% OFF
+	ERR161318 = 72% OFF
 
-(Paired Reads)
-ERR161302 = 94% OFF
-ERR161318 = 79% OFF
+(Paired Reads):
+	ERR161302 = 94% OFF
+	ERR161318 = 79% OFF
 
 
 
