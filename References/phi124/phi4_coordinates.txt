@@ -1,0 +1,7 @@
+Region  Start   End
+A_left_flank	n/a	1000
+A_switch_region	1001	4079
+A_right_flank	4080	5079
+B_left_flank	5080	6079
+B_switch_region	6080	9158
+B_right_flank	9159	n/a
