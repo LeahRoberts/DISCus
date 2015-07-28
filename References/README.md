@@ -10,7 +10,7 @@ The EC958 fasta files contained either a fimS in the OFF orientation (EC958.fast
 
 Following the manual instructions and the given error models in GemSIM (http://sourceforge.net/projects/gemsim/), the following commands were run in order to generate simulated reads:
 
-  $ python ./GemReads.py -r EC958.fasta -n 10000000 -l 100 -u 300 -s 20 -m models/ill100v4_p.gzip -c -q 64 -o EC958-OFF -p $ python ./GemReads.py -r EC958_fimS_ON.fasta -n 10000000 -l 100 -u 300 -s 20 -m models/ill100v4_p.gzip -c -q 64 -o EC958-ON -p
+ 	$ python ./GemReads.py -r EC958.fasta -n 10000000 -l 100 -u 300 -s 20 -m models/ill100v4_p.gzip -c -q 64 -o EC958-OFF -p $ python ./GemReads.py -r EC958_fimS_ON.fasta -n 10000000 -l 100 -u 300 -s 20 -m models/ill100v4_p.gzip -c -q 64 -o EC958-ON -p
 
 To parse the reads to give differing proportions of OFF to ON, the files were merged:
 
