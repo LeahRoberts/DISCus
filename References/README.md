@@ -25,20 +25,20 @@ References with varying pseudo-inversions were created using the coordinates bel
 
 Inversion sizes:
 
-150 bp (1827933..1828082)
-250 bp (1827933..1828182)
-350 bp (1827933..1828282)
-500 bp (1827933..1828432)
-600 bp (1827933..1828532)
-700 bp (1827933..1828632)
-800 bp (1827933..1828732)
-1000 bp (1827933..1828932)
-1250 bp (1827933..1829182)
-1500 bp (1827933..1829432)
-1750 bp (1827933..1829682)
-2000 bp (1827933..1829932)
-2500 bp (1827933..1830432)
-3000 bp (1827933..1830933)
+* 150 bp (1827933..1828082)
+* 250 bp (1827933..1828182)
+* 350 bp (1827933..1828282)
+* 500 bp (1827933..1828432)
+* 600 bp (1827933..1828532)
+* 700 bp (1827933..1828632)
+* 800 bp (1827933..1828732)
+* 1000 bp (1827933..1828932)
+* 1250 bp (1827933..1829182)
+* 1500 bp (1827933..1829432)
+* 1750 bp (1827933..1829682)
+* 2000 bp (1827933..1829932)
+* 2500 bp (1827933..1830432)
+* 3000 bp (1827933..1830933)
 
 Extra genomes where these regions are inverted (reverse complemented) were manually created. To create reads for both orientations, reads were generated using GemSIM from the fasta references (with the pseudo-inversion).
 
