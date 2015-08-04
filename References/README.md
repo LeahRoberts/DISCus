@@ -10,7 +10,7 @@ The EC958 fasta files contained either a fimS in the OFF orientation (EC958.fast
 
 Following the manual instructions and the given error models in GemSIM (http://sourceforge.net/projects/gemsim/), the following commands were run in order to generate simulated reads:
 
-  $ python ./GemReads.py -r EC958.fasta -n 10000000 -l 100 -u 300 -s 20 -m models/ill100v4_p.gzip -c -q 64 -o EC958-OFF -p $ python ./GemReads.py -r EC958_fimS_ON.fasta -n 10000000 -l 100 -u 300 -s 20 -m models/ill100v4_p.gzip -c -q 64 -o EC958-ON -p
+ 	$ python ./GemReads.py -r EC958.fasta -n 10000000 -l 100 -u 300 -s 20 -m models/ill100v4_p.gzip -c -q 64 -o EC958-OFF -p $ python ./GemReads.py -r EC958_fimS_ON.fasta -n 10000000 -l 100 -u 300 -s 20 -m models/ill100v4_p.gzip -c -q 64 -o EC958-ON -p
 
 To parse the reads to give differing proportions of OFF to ON, the files were merged:
 
@@ -25,20 +25,20 @@ References with varying pseudo-inversions were created using the coordinates bel
 
 Inversion sizes:
 
-150 bp (1827933..1828082)
-250 bp (1827933..1828182)
-350 bp (1827933..1828282)
-500 bp (1827933..1828432)
-600 bp (1827933..1828532)
-700 bp (1827933..1828632)
-800 bp (1827933..1828732)
-1000 bp (1827933..1828932)
-1250 bp (1827933..1829182)
-1500 bp (1827933..1829432)
-1750 bp (1827933..1829682)
-2000 bp (1827933..1829932)
-2500 bp (1827933..1830432)
-3000 bp (1827933..1830933)
+* 150 bp (1827933..1828082)
+* 250 bp (1827933..1828182)
+* 350 bp (1827933..1828282)
+* 500 bp (1827933..1828432)
+* 600 bp (1827933..1828532)
+* 700 bp (1827933..1828632)
+* 800 bp (1827933..1828732)
+* 1000 bp (1827933..1828932)
+* 1250 bp (1827933..1829182)
+* 1500 bp (1827933..1829432)
+* 1750 bp (1827933..1829682)
+* 2000 bp (1827933..1829932)
+* 2500 bp (1827933..1830432)
+* 3000 bp (1827933..1830933)
 
 Extra genomes where these regions are inverted (reverse complemented) were manually created. To create reads for both orientations, reads were generated using GemSIM from the fasta references (with the pseudo-inversion).
 
