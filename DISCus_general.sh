@@ -317,7 +317,7 @@ do
 			then
 				read1='ON_left_flank'
 
-			elif [ $a -ge $B2_1 -a $a -le $B2_1 ]
+			elif [ $a -ge $B2_1 -a $a -le $B2_2 ]
 			then
 				read1='ON_switch_region'
 
