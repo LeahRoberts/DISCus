@@ -1,4 +1,4 @@
-DISCus - *D*NA *I*nvertibe *S*witch *C*ounter
+DISCus - *D*NA *I*nvertible *S*witch *C*ounter
 ==============================================
 
 Simple Overview:
