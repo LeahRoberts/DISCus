@@ -20,7 +20,7 @@ Installation Requirements
 
 1. BWA version: 0.6.1 (http://sourceforge.net/projects/bio-bwa/files/)
 2. SAMtools version: 1.2 (using htslib 1.2) (http://samtools.sourceforge.net/)
-3. Bedtools version: v2.23.0 (http://bedtools.readthedocs.org/en/latest/content/installation.html)
+3. Bedtools version: 2.23.0 (http://bedtools.readthedocs.org/en/latest/content/installation.html)
 4. Bedops version: 2.4.14 (http://bedops.readthedocs.org/en/latest/content/installation.html) 
 5. Python version: 2.7
 6. Biopython version: 1.64 (http://biopython.org/wiki/Main_Page)
@@ -28,40 +28,53 @@ Installation Requirements
 File Requirements
 ------------------
 
+Reference Files (which can be generated with python script):
+
 1. REFERENCE in fasta format (see below - 'Construction of Reference')
-2. BEDMAP_REFERENCE in bed format. (see below - 'Construction of Reference' and 'Construction of Bedmap_reference')
-3. illumina paired-end read files NOT interleaved, named: <strain>_1.fastq, _2.fastq (see below - Fastq File Format)
-4. Coordinates file (see below - 'Construction of Reference' and 'Construction of Coordinates File')
+2. BEDMAP_REFERENCE in bed format (see below - 'Construction of Reference' and 'Construction of Bedmap_reference')
+3. Coordinates file (see below - 'Construction of Reference' and 'Construction of Coordinates File')
+
+Fastq files:
+
+4. Illumina paired-end read files NOT interleaved, named: <strain>_1.fastq, _2.fastq (see below - Fastq File Format)
 
 
 Test Data
 ==========
 
-**Step 1.** Make a directory called "reads".
+**Step 1.** Install all of the necessary software requirements.
 
-**Step 2.** Download the paired fastq files from EMBL-EBI for the ST131 strains S37EC (ERR161302) and HVM1147 (ERR161318) into the "reads" directory:
+**Step 2.** Make a directory called "reads".
+
+**Step 3.** Download the paired fastq files from EMBL-EBI for the ST131 strains S37EC (ERR161302) and HVM1147 (ERR161318) into the "reads" directory:
 
 	$ wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR161/ERR161302/ERR161302_*.fastq.gz
 	$ wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR161/ERR161318/ERR161318_*.fastq.gz
 	
 
-**Step 3.** Above the reads directory, download the complete genome for *Escherichia coli* O25b:H4-ST131 str. EC958 from NCBI (NZ_HG941718.1, GI:802098267) (complete fasta sequence).
+**Step 4.** Above the reads directory, download the complete genome for *Escherichia coli* O25b:H4-ST131 str. EC958 from NCBI (NZ_HG941718.1, GI:802098267) (complete fasta sequence).
 
-**Step 4.** Generate reference fasta, bed and coordinate files using the python script DISCus_create_reference.py:
+**Step 5.** Generate reference fasta, bed and coordinate files using the python script DISCus_create_reference.py:
 
 	$ python ~/PATH/TO/DISCus_create_reference.py EC958_complete.fasta 5018228 5018540 EC958_OFF_ON
 
 *If you get errors, make sure python and biopython are correctly installed.*
 	
 
-**Step 5.** Check that all the files are in the correct directory (fastq files in reads directory, all other files in directory above reads). 
+**Step 6.** Check that all the files are in the correct directory (fastq files in reads directory, all other files in directory above reads). 
 
-**Step 6.** Run DISCus from reads directory:
+**Step 7.** Run DISCus from reads directory:
 
 	$ bash ~/PATH/TO/DISCus_general.sh ../EC958_OFF_ON.fa ../EC958_OFF_ON.bed ../EC958_OFF_ON-coordinates.txt
 
+The script will automatically detect the fastq pairs.
 
-Output results should be:
+The output will be in the form of two csv files containing the results for two separate analyses. To view these on the command line:
+
+	$ cat Bedmaps_results.csv
+	$ cat Paired_read_results.csv
+	
+This should give you the following output:
 
 *Bedmaps results:*
 
@@ -71,8 +84,8 @@ Output results should be:
 
 *Paired_read_results:*
 
-	ERR161302,39,43,4,1
-	ERR161318,17,17,9,0
+	ERR161302,39,43,1,0
+	ERR161318,17,17,8,13
 
 
 Where A_1 and A_2 indicate reads overlapping the first orientation in the pseudo-reference (OFF), and B_1 and B_2 indicate reads overlapping the second orientation (ON). 
@@ -86,8 +99,8 @@ As a percentage:
 
 (Paired Reads):
 
-	ERR161302 = 94% OFF
-	ERR161318 = 79% OFF
+	ERR161302 = 99% OFF
+	ERR161318 = 62% OFF
 
 
 
