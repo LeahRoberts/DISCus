@@ -19,7 +19,7 @@ Installation Requirements
 --------------------------
 
 1. BWA version: 0.7.12 (http://sourceforge.net/projects/bio-bwa/files/)
-2. SAMtools version: 1.2 (using htslib 1.2) (http://samtools.sourceforge.net/)
+2. SAMtools version: 1.3.1 (using htslib 1.3.1) (http://samtools.sourceforge.net/)
 3. Bedtools version: 2.23.0 (http://bedtools.readthedocs.org/en/latest/content/installation.html)
 4. Bedops version: 2.4.14 (http://bedops.readthedocs.org/en/latest/content/installation.html) 
 5. Python version: 2.7
