@@ -134,14 +134,14 @@ do
 # '-f 0x0002' tells samtools to only take correctly paired reads. '-F 4' tells samtools to only take reads that have mapped
 # to the reference.
                         			samtools view -bS -f 0x0002 -F 4 $name.sam > $name.bam
-                        			samtools sort $name.bam $name.sorted
+                        			samtools sort $name.bam -o $name.sorted.bam
                         			samtools index $name.sorted.bam
 
 # Removes the original fastq files and the SAM file. These should be commented out if using the script for the first time or
 # if the user prefers to keep all the data:
 #						rm $f
 #						rm $g
-						rm $name.sam
+						#rm $name.sam
 
                     			fi
                 		done
@@ -160,11 +160,11 @@ do
                         			echo $f "and" $g "are a pair"
                             			bwa sampe $REFERENCE $name\_1.sai $name\_2.sai $g $f > $name.sam
                             			samtools view -bS -f 0x0002 -F 4 $name.sam > $name.bam
-                            			samtools sort $name.bam $name.bam.sorted
+                            			samtools sort $name.bam -o $name.sorted.bam
                             			samtools index $name.bam.sorted
 #						rm $f
 #						rm $g
-						rm $name.sam
+						#rm $name.sam
                         		fi
                 		done
             		fi
@@ -183,7 +183,7 @@ do
         if [[ $f == *.sai ]]
         then
                 echo "deleting " $f
-                rm $f
+                #rm $f
 
 # The next command then counts all the reads aligning the "exons" defined by the BEDMAP_REFERENCE file.
 # This BEDMAP_REFERENCE file can be generated using the DISCus_create_reference.py script
@@ -258,6 +258,8 @@ B1_2=$(head -5 $coordinates | tail -1 | cut -f3 -d$'\t')
 B2_1=$(tail -2 $coordinates | head -1 | cut -f2 -d$'\t')
 B2_2=$(tail -2 $coordinates | head -1 | cut -f3 -d$'\t')
 B3=$(tail -1 $coordinates | cut -f2 -d$'\t')
+
+echo "STRAIN,A_1,A_2,B_1,B_2" > Paired_read_results.csv
 
 for f in *
 do
