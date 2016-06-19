@@ -80,7 +80,7 @@ To check your python and biopython installation, type::
 
 	$ python                 # You will see a python prompt
 	>>> import Bio           # checking for Biopython installation
-	$ exit()		 # to exit python prompt
+	>>> exit()		 # to exit python prompt
 	
 If there were no errors, python and biopython should be installed correctly.
 
