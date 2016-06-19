@@ -41,7 +41,7 @@ To do this, determine the full PATH to your BWA/SAMtools installation and add th
 Open terminal and located where you have installed BWA/SAMtools.
 In the BWA/SAMtools installation folder::
 
-	$ pwd        # This will give you the full PATH to your BWA/SAMtools installation
+	$ pwd        			# This will give you the full PATH to your BWA/SAMtools installation
 	$ export PATH=$PATH:</PATH/TO/INSTALLATION/>
 	$ source ~/.bashrc
 	$ echo $PATH
@@ -103,9 +103,32 @@ Fastq files:
 Test Data
 ==========
 
-**Step 1.** Install all of the necessary software requirements (see above).
+**Step 1.** Open terminal. Install all of the necessary software requirements (see above).
 
-**Step 2.** Open terminal. Make a directory called "reads" and download the paired fastq files from EMBL-EBI for the ST131 strains S37EC (ERR161302) and HVM1147 (ERR161318) into the "reads" directory::
+**Step 2.** Download (via zip) or git clone the DISCus repository. We recommend putting DISCus into your ~/bin directory (if you have one)::
+
+	$ mkdir ~/bin   # if you don't have a bin directory already
+	$ cd ~/bin     
+	$ git clone https://github.com/LeahRoberts/DISCus.git
+	
+If you have downloaded DISCus as a zip folder, move it from your downloads folder onto your desktop, then in terminal type:
+
+	$ mkdir ~/bin  # if you don't have a bin directory already 
+	$ cd ~/Destop
+	$ mv ~/Desktop/DISCus/ ~/bin/
+	$ ls ~/bin     # You should now see DISCus in your bin directory
+
+**Step 3.** Navigate to where you would like to carry out your analyses (this could be in a work directory, your desktop etc.). 
+
+	$ cd <directory where you want to work>  
+
+If you're not sure where you want to work, we recommend making a test directory on your desktop (which you can delete later):
+
+	$ cd ~/Desktop
+	$ mkdir DISCus_test
+	$ cd DISCus_test
+	
+**Step 4.** In your working directory, make another directory called "reads" and download the paired fastq files from EMBL-EBI for the ST131 strains S37EC (ERR161302) and HVM1147 (ERR161318) into the "reads" directory::
 
 	$ mkdir reads
 	$ cd reads
@@ -114,25 +137,23 @@ Test Data
 	
 *OSX: If wget does not work you may need to install it using homebrew.*
 
-**Step 3.** Above the reads directory, download the complete genome for *Escherichia coli* O25b:H4-ST131 str. EC958 from NCBI (NZ_HG941718.1, GI:802098267) (complete fasta sequence). Call this file: "EC958_complete.fasta"::
+**Step 5.** Generate the reference fasta, bed and coordinate files using the python script DISCus_create_reference.py one directory ABOVE the reads directory::
 
 	$ cd ../
-	$ ls                 # you should see "EC958_complete.fasta" and the reads/ directory
-
-
-**Step 4.** Generate reference fasta, bed and coordinate files using the python script DISCus_create_reference.py:
-
-	$ python ~/PATH/TO/DISCus_create_reference.py EC958_complete.fasta 5018228 5018540 EC958_OFF_ON
+	$ python ~/bin/DISCus/DISCus_create_reference.py ~/bin/DISCus/References/EC958_complete.fasta 5018228 5018540 EC958_OFF_ON
 
 *If you get errors, make sure python and biopython are correctly installed.*
 	
 
-**Step 5.** Check that all the files are in the correct directory (fastq files in reads directory, all other files in directory above reads). 
+**Step 6.** Check that all the files are present and in the correct directory (4 fastq files in the reads directory, all other files in directory above reads). 
+
+	$ ls           # in the current directory - should be EC958_OFF_ON.fa, EC958_OFF_ON.bed and coordinates files
+	$ ls reads/    # should be 4 x fastq files
 
 **Step 7.** Run DISCus from reads directory:
 
 	$ cd reads/
-	$ bash ~/PATH/TO/DISCus_general.sh ../EC958_OFF_ON.fa ../EC958_OFF_ON.bed ../EC958_OFF_ON-coordinates.txt
+	$ bash ~/bin/DISCus/DISCus_general.sh ../EC958_OFF_ON.fa ../EC958_OFF_ON.bed ../EC958_OFF_ON-coordinates.txt
 
 The script will automatically detect the fastq pairs.
 
