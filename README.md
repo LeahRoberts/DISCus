@@ -25,6 +25,67 @@ Installation Requirements
 5. Python version: 2.7
 6. Biopython version: 1.64 (http://biopython.org/wiki/Main_Page)
 
+Installation Commands
+----------------------
+
+Installation of the software requirements is dependent on the operating system you are using.
+Mac OSX and Linux are the most straight-forward. If you are using Windows, we recommend setting up a virtual machine to run Linux on top of your Windows operating system.
+
+**BWA and SAMtools installation**
+
+The appropriate BWA and SAMtools versions can be downloaded as tar.bz2 files from the above links and installed following the makers instructions. 
+
+BWA and SAMtools will need to be in your $PATH so that DISCus can call them as needed from the command line.
+To do this, determine the full PATH to your BWA/SAMtools installation and add this to your .bashrc:
+
+Open terminal and located where you have installed BWA/SAMtools.
+In the BWA/SAMtools installation folder::
+
+	$ pwd        # This will give you the full PATH to your BWA/SAMtools installation
+	$ export PATH=$PATH:</PATH/TO/INSTALLATION/>
+	$ source ~/.bashrc
+	$ echo $PATH
+
+Do this for both SAMtools and BWA - when you echo $PATH you should be able to see BWA and SAMtools installation folders. 
+To test that the installation has worked, open a new terminal and type::
+
+	$ samtools
+	$ bwa
+	
+The version as well as command line options for the tools should be displayed.
+
+**Bedtools and Bedops installation**
+
+Bedtools and Bedops can be installed using Homebrew::
+
+	$ brew install bedtools
+	$ brew install bedops
+	
+To check installation, type::
+
+	$ bedtools
+	$ bedops
+	
+The version as well as command line options for the tools should be displayed.
+	
+**Python and biopython installation**
+
+Mac OSX should come with python installed. 
+
+Linux: If you are unfamiliar with the command line, we recommend downloading [Anaconda](https://docs.continuum.io/anaconda/index) which will install Python, Biopython, plus other common dependencies for data and scientific analysis. 
+
+Biopython installation is well documented [here](http://biopython.org/wiki/Getting_Started). 
+
+To check your python and biopython installation, type::
+
+	$ python                 # You will see a python prompt
+	>>> import Bio           # checking for Biopython installation
+	$ exit()		 # to exit python prompt
+	
+If there were no errors, python and biopython should be installed correctly.
+
+
+
 File Requirements
 ------------------
 
@@ -42,29 +103,35 @@ Fastq files:
 Test Data
 ==========
 
-**Step 1.** Install all of the necessary software requirements.
+**Step 1.** Install all of the necessary software requirements (see above).
 
-**Step 2.** Make a directory called "reads".
+**Step 2.** Open terminal. Make a directory called "reads" and download the paired fastq files from EMBL-EBI for the ST131 strains S37EC (ERR161302) and HVM1147 (ERR161318) into the "reads" directory::
 
-**Step 3.** Download the paired fastq files from EMBL-EBI for the ST131 strains S37EC (ERR161302) and HVM1147 (ERR161318) into the "reads" directory:
-
+	$ mkdir reads
+	$ cd reads
 	$ wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR161/ERR161302/ERR161302_*.fastq.gz
 	$ wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR161/ERR161318/ERR161318_*.fastq.gz
 	
+*OSX: If wget does not work you may need to install it using homebrew.*
 
-**Step 4.** Above the reads directory, download the complete genome for *Escherichia coli* O25b:H4-ST131 str. EC958 from NCBI (NZ_HG941718.1, GI:802098267) (complete fasta sequence).
+**Step 3.** Above the reads directory, download the complete genome for *Escherichia coli* O25b:H4-ST131 str. EC958 from NCBI (NZ_HG941718.1, GI:802098267) (complete fasta sequence). Call this file: "EC958_complete.fasta"::
 
-**Step 5.** Generate reference fasta, bed and coordinate files using the python script DISCus_create_reference.py:
+	$ cd ../
+	$ ls                 # you should see "EC958_complete.fasta" and the reads/ directory
+
+
+**Step 4.** Generate reference fasta, bed and coordinate files using the python script DISCus_create_reference.py:
 
 	$ python ~/PATH/TO/DISCus_create_reference.py EC958_complete.fasta 5018228 5018540 EC958_OFF_ON
 
 *If you get errors, make sure python and biopython are correctly installed.*
 	
 
-**Step 6.** Check that all the files are in the correct directory (fastq files in reads directory, all other files in directory above reads). 
+**Step 5.** Check that all the files are in the correct directory (fastq files in reads directory, all other files in directory above reads). 
 
 **Step 7.** Run DISCus from reads directory:
 
+	$ cd reads/
 	$ bash ~/PATH/TO/DISCus_general.sh ../EC958_OFF_ON.fa ../EC958_OFF_ON.bed ../EC958_OFF_ON-coordinates.txt
 
 The script will automatically detect the fastq pairs.
