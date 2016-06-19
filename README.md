@@ -19,7 +19,7 @@ Installation Requirements
 --------------------------
 
 1. BWA version: 0.7.12 (http://sourceforge.net/projects/bio-bwa/files/)
-2. SAMtools version: 1.3.1 (using htslib 1.3.1) (http://samtools.sourceforge.net/)
+2. SAMtools version: 1.3.1 (using htslib 1.3.1) (https://sourceforge.net/projects/samtools/files/samtools/)
 3. Bedtools version: 2.23.0 (http://bedtools.readthedocs.org/en/latest/content/installation.html)
 4. Bedops version: 2.4.14 (http://bedops.readthedocs.org/en/latest/content/installation.html) 
 5. Python version: 2.7
@@ -33,10 +33,15 @@ Mac OSX and Linux are the most straight-forward. If you are using Windows, we re
 
 **BWA and SAMtools installation**
 
-The appropriate BWA and SAMtools versions can be downloaded as tar.bz2 files from the above links and installed following the makers instructions. 
+Appropriate BWA and SAMtools versions can be downloaded as tar.bz2 files (following the above links). If they are in your downloads folder, we recommend moving them to either a ~/bin directory or to your desktop. Extract them on the command line using:
+
+	$ cd <place where you downloaded them>
+	$ tar jxf <filename>.tar.bz2
+	
+Follow the README within each folder for further intallation instructions.  
 
 BWA and SAMtools will need to be in your $PATH so that DISCus can call them as needed from the command line.
-To do this, determine the full PATH to your BWA/SAMtools installation and add this to your .bashrc:
+To do this, determine the full PATH to your BWA/SAMtools installation and add this to your $PATH:
 
 Open terminal and located where you have installed BWA/SAMtools.
 In the BWA/SAMtools installation folder::
@@ -74,7 +79,7 @@ Mac OSX should come with python installed.
 
 Linux: If you are unfamiliar with the command line, we recommend downloading [Anaconda](https://docs.continuum.io/anaconda/index) which will install Python, Biopython, plus other common dependencies for data and scientific analysis. 
 
-Biopython installation is well documented [here](http://biopython.org/wiki/Getting_Started). 
+If you don't have Biopython, installation instructions are well documented [here](http://biopython.org/wiki/Getting_Started). 
 
 To check your python and biopython installation, type::
 
