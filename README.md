@@ -38,13 +38,13 @@ Appropriate BWA and SAMtools versions can be downloaded as tar.bz2 files (follow
 	$ cd <place where you downloaded them>
 	$ tar jxf <filename>.tar.bz2
 	
-Follow the README within each folder for further intallation instructions.  
+Follow the README within each folder for further installation instructions.  
 
 BWA and SAMtools will need to be in your $PATH so that DISCus can call them as needed from the command line.
 To do this, determine the full PATH to your BWA/SAMtools installation and add this to your $PATH:
 
 Open terminal and located where you have installed BWA/SAMtools.
-In the BWA/SAMtools installation folder::
+In the BWA/SAMtools installation folder:
 
 	$ pwd        			# This will give you the full PATH to your BWA/SAMtools installation
 	$ export PATH=$PATH:</PATH/TO/INSTALLATION/>
@@ -52,7 +52,7 @@ In the BWA/SAMtools installation folder::
 	$ echo $PATH
 
 Do this for both SAMtools and BWA - when you echo $PATH you should be able to see BWA and SAMtools installation folders. 
-To test that the installation has worked, open a new terminal and type::
+To test that the installation has worked, open a new terminal and type:
 
 	$ samtools
 	$ bwa
@@ -61,12 +61,12 @@ The version as well as command line options for the tools should be displayed.
 
 **Bedtools and Bedops installation**
 
-Bedtools and Bedops can be installed using Homebrew::
+Bedtools and Bedops can be installed using Homebrew:
 
 	$ brew install bedtools
 	$ brew install bedops
 	
-To check installation, type::
+To check installation, type:
 
 	$ bedtools
 	$ bedops
@@ -81,7 +81,7 @@ Linux: If you are unfamiliar with the command line, we recommend downloading [An
 
 If you don't have Biopython, installation instructions are well documented [here](http://biopython.org/wiki/Getting_Started). 
 
-To check your python and biopython installation, type::
+To check your python and biopython installation, type:
 
 	$ python                 # You will see a python prompt
 	>>> import Bio           # checking for Biopython installation
@@ -110,7 +110,7 @@ Test Data
 
 **Step 1.** Open terminal. Install all of the necessary software requirements (see above).
 
-**Step 2.** Download (via zip) or git clone the DISCus repository. We recommend putting DISCus into your ~/bin directory (if you have one)::
+**Step 2.** Download (via zip) or git clone the DISCus repository. We recommend putting DISCus into your ~/bin directory (if you have one):
 
 	$ mkdir ~/bin   # if you don't have a bin directory already
 	$ cd ~/bin     
@@ -133,7 +133,7 @@ If you're not sure where you want to work, we recommend making a test directory 
 	$ mkdir DISCus_test
 	$ cd DISCus_test
 	
-**Step 4.** In your working directory, make another directory called "reads" and download the paired fastq files from EMBL-EBI for the ST131 strains S37EC (ERR161302) and HVM1147 (ERR161318) into the "reads" directory::
+**Step 4.** In your working directory, make another directory called "reads" and download the paired fastq files from EMBL-EBI for the ST131 strains S37EC (ERR161302) and HVM1147 (ERR161318) into the "reads" directory:
 
 	$ mkdir reads
 	$ cd reads
@@ -142,7 +142,7 @@ If you're not sure where you want to work, we recommend making a test directory 
 	
 *OSX: If wget does not work you may need to install it using homebrew.*
 
-**Step 5.** Generate the reference fasta, bed and coordinate files using the python script DISCus_create_reference.py one directory ABOVE the reads directory::
+**Step 5.** Generate the reference fasta, bed and coordinate files using the python script DISCus_create_reference.py one directory ABOVE the reads directory:
 
 	$ cd ../
 	$ python ~/bin/DISCus/DISCus_create_reference.py ~/bin/DISCus/References/EC958_complete.fasta 5018228 5018540 EC958_OFF_ON
@@ -150,7 +150,7 @@ If you're not sure where you want to work, we recommend making a test directory 
 *If you get errors, make sure python and biopython are correctly installed.*
 	
 
-**Step 6.** Check that all the files are present and in the correct directory (4 fastq files in the reads directory, all other files in directory above reads). 
+**Step 6.** Check that all the files are present and in the correct directory (4 fastq files in the reads directory, all other files in directory above reads):
 
 	$ ls           # in the current directory - should be EC958_OFF_ON.fa, EC958_OFF_ON.bed and coordinates files
 	$ ls reads/    # should be 4 x fastq files
