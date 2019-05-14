@@ -222,7 +222,7 @@ Construction of Reference
 The python script, *DISCus_create_reference.py*, can automatically generate a fasta pseudo-reference, bed file reference and coordinates file for analysis with DISCus using a fasta file of the genome of interest.
 The script takes in four arguments and can be exected as shown below::
 
- 	$ python DISCus_create_reference.py <genome_sequence.fasta> <start_coordinate> <end_coordinate> <filename>
+ 	$ python DISCus_create_reference.v2.py <genome_sequence.fasta> <start_coordinate> <end_coordinate> <filename>
  
 Where **start_coordinate** is the start of the invertible DNA region of interest, and **end_coordinate** is the end of the invertible DNA region. The script also requires a filename, which will become the name of the output file as well as the fasta header. 
 
