@@ -7,23 +7,29 @@ DISCus is a script for mapping illumina paired end reads with BWA to an invertib
 
 Basic Commands:
 ---------------
-To generate references:
+To generate references (requires python v2.7):
 
-	$ python DISCus_create_reference.py <file.fasta> <start_coordinate> <end_coordinate> <out_name>
+	$ python DISCus_create_reference.v2.py <file.fasta> <start_coordinate> <end_coordinate> <out_name>
 
-To run DISCus (with full path to files):
+To run DISCus using BWA MEM (in folder with reads with full path to files):
 
-	$ bash ~/PATH/TO/DISCus/DISCus_general.sh <ref.fasta> <ref.bed> <coordinates.txt>
+	$ bash ~/PATH/TO/DISCus/DISCus_general.v2.bwamem.sh <ref.fasta> <ref.bed> <coordinates.txt>
+	
+To run DISCus using minimap2 (in folder with reads with full path to files):
+
+	$ bash ~/PATH/TO/DISCus/DISCus_general.v2.minimap.sh <ref.fasta> <ref.bed> <coordinates.txt>
+
 
 Installation Requirements
 --------------------------
 
-1. BWA version: 0.7.12 (http://sourceforge.net/projects/bio-bwa/files/)
+1. BWA MEM version: 0.7.17 (http://sourceforge.net/projects/bio-bwa/files/)
 2. SAMtools version: 1.3.1 (using htslib 1.3.1) (https://sourceforge.net/projects/samtools/files/samtools/)
 3. Bedtools version: 2.23.0 (http://bedtools.readthedocs.org/en/latest/content/installation.html)
 4. Bedops version: 2.4.14 (http://bedops.readthedocs.org/en/latest/content/installation.html) 
 5. Python version: 2.7
 6. Biopython version: 1.64 (http://biopython.org/wiki/Main_Page)
+7. minimap2 version 2.11-r797 (https://github.com/lh3/minimap2)
 
 Installation Commands
 ----------------------
@@ -102,7 +108,7 @@ Reference Files (which can be generated with python script):
 
 Fastq files:
 
-4. Illumina paired-end read files NOT interleaved, named: <strain>_1.fastq, _2.fastq (see below - Fastq File Format)
+4. Illumina paired-end read files NOT interleaved (can be gzipped), named: <strain>_1.fastq, _2.fastq (see below - Fastq File Format). 
 
 
 Test Data
@@ -222,7 +228,7 @@ Where **start_coordinate** is the start of the invertible DNA region of interest
 
 The fasta header generated will be::
 
- 	> <filename> _ <start_coordinate> _ <end_coordinate>
+ 	> <filename>_<start_coordinate>_<end_coordinate>
 	 Sequence...
  
 The sequence will include 1000 bp of flanking region, as well as both orientations of the invertible DNA region.
@@ -231,13 +237,13 @@ The sequence will include 1000 bp of flanking region, as well as both orientatio
 
 Using the EC958_complete.fasta genome as the input, and wanting a 100 bp inversion region between 182100 and 182200, the command to execute the script would be::
  
-  	$ python DISCus_create_reference.py EC958_complete.fasta 182100 182200 EC958_100bp
+  	$ python DISCus_create_reference.py EC958_complete.fasta 182100 182200 EC958
 
 *Note: the script will not run unless all four arguments are given. The filename argument should be without spaces.*
 
 The output of this will be:
 
-1. a pseudo-reference with the header ">EC958_100bp_182100_182200"
+1. a pseudo-reference with the header ">EC958_182100_182200"
 2. a bedmaps reference file indicating 10 bp overlap regions on either end of the invertible DNA region of interest (further explained in "Construction of Bedmap_reference" section)
 3. A coordinates file (txt) defining the regions of the pseudo-reference necessary for determining paired-end read traversal
 
@@ -253,8 +259,8 @@ The REFERENCE should contain the invertible DNA sequence with 1000 bp flanking s
 ------------------>>>>>>>>>>------------------/------------------<<<<<<<<<<------------------
 
 * ------ = Flanking regions
-* >>>>>> = Invertible DNA sequence, orientation 1
-* <<<<<< = Invertible DNA sequence, orientation 2
+* >>>>> = Invertible DNA sequence, orientation 1
+* <<<<< = Invertible DNA sequence, orientation 2
  
 The flanking sequences remain the same for each orientation, while the invertible DNA switch should be reverse complemented. In this way, both orientations are represented in the REFERENCE. 
 
@@ -268,14 +274,14 @@ In order to count reads traversing the bordering regions of the invertible DNA s
 The start and end coordinates for each region is necessary for the assignation of reads to their correct region. Therefore, the script needs to read in a text file with these coordinate. The file needs to be in the below format, with the number changed accordingly::
 
 	Region	Start	End
-	A_left_flank	n/a	1000
+	A_left_flank	1	1000
 	A_switch_region	1001	1313
 	A_right_flank	1314	2313
 	B_left_flank	2314	3313
 	B_switch_region	3314	3626
-	B_right_flank	3627	n/a
+	B_right_flank	3627	4626
 	
-The 'n/a' regions are irrelevant as they represent the lower most and uppermost regions. The file needs to have a header, and should be **tab delimited**.
+The file needs to have a header, and should be **tab delimited**.
 
 
 Construction of Bedmap_reference
@@ -320,7 +326,7 @@ How-To: Run Me
 ---------------
 Simple overview::
 
-	$ bash PATH/TO/DISCus_general.sh <PATH_to_fasta_ref> <PATH_to_bedmaps_ref> <PATH_to_coordinates_file>
+	$ bash PATH/TO/DISCus_general.v2.[bwamem|minimap].sh <PATH_to_fasta_ref> <PATH_to_bedmaps_ref> <PATH_to_coordinates_file>
 	
 
 This bash scripts requires the reference sequences to have already been generated. Furthermore, the reads (illumina paired end - not interleaved) need to be in a directory below the reference files, and the bash script should be executed in the file containing the reads, according to this diagram:
@@ -339,7 +345,7 @@ Two other files will also be created:
 1. Bedmap_results.csv - The concatenated results for the bedmaps counts of reads overlapping the provided exon locations
 2. Paired_read_results.csv - The concatenated results for the paired-end read counts which traverse the region of interest
 
-**NOTE**: The script works based on counting the overlapping reads for two orientations of an invertible DNA region. Thus, the input requires a REFERENCE with opposing orientations of an invertible DNA switch, arbitrarily named OFF and ON. The output assumes that the REFERENCE has been designed with OFF orientation first (i.e leftmost), and the ON orientation second. 
+**NOTE**: The script works based on counting the overlapping reads for two orientations of an invertible DNA region. Thus, the input requires a REFERENCE with opposing orientations of an invertible DNA switch, arbitrarily named OFF and ON. The output assumes that the REFERENCE has been designed with OFF orientation first (i.e leftmost - position A_1 and A_2), and the ON orientation second (positions B_1 and B_2). 
 
 Licence
 --------
